@@ -16,11 +16,13 @@
   position: relative;
   overflow: hidden;
 }
-
+.pdf-skills-page {
+  padding: 40px 48px;
+}
 .pdf-header {
   text-align: center;
-  margin-bottom: 30px;
-  border-bottom: 3px solid #000;
+  margin-bottom: 13px;
+  border-bottom: 1px solid #dddddd;
   padding-bottom: 10px;
 }
 .pdf-main-header {
@@ -36,6 +38,16 @@
   font-weight: 700;
   margin: 20px 0 5px 0;
   letter-spacing: 1px;
+  text-align: start;
+  position: relative;
+}
+.pdf-title::before {
+  content: "";
+  height: 4px;
+  width: 180px;
+  background-color: #000000;
+  position: absolute;
+  bottom: -15px;
 }
 
 .pdf-date {
@@ -55,8 +67,13 @@
 }
 
 .pdf-section {
-  margin-bottom: 25px;
+  margin-bottom: 10px;
   text-align: left;
+  overflow: hidden;
+}
+.pdf-health-section {
+  border-bottom: 1px solid #dddddd;
+  padding-bottom: 30px;
 }
 .margin-top {
   margin-top: 40px;
@@ -74,13 +91,29 @@
   text-transform: uppercase;
   text-align: left;
   margin: 0 0 8px 0;
+  padding-top: 8px;
   padding-bottom: 5px;
   padding-left: 15px;
   /* border-bottom: 4px solid #000; */
   letter-spacing: 0.5px;
   position: relative;
 }
-
+.pdf-dice-section-para {
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: left;
+  margin: 0 0 0px 0;
+  padding-top: 8px;
+  padding-bottom: 5px;
+  padding-left: 0px;
+  /* border-bottom: 4px solid #000; */
+  letter-spacing: 0.5px;
+  position: relative;
+}
+.pdf-section-title-without-before::before {
+  display: none;
+}
 .pdf-section-title::after {
   content: "";
   height: 1px;
@@ -101,10 +134,11 @@
 }
 
 .pdf-subsection-title {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
   text-transform: uppercase;
   margin: 15px 0 0px 0;
+  text-align: start;
   color: #999;
   letter-spacing: 0.5px;
 }
@@ -168,7 +202,7 @@
   justify-content: space-between;
   margin: 15px 0;
   padding: 10px;
-  /* border: 2px solid #000; */
+  border-bottom: 1px solid #dddd;
 }
 
 .pdf-health-item {
@@ -177,7 +211,7 @@
 }
 
 .pdf-health-label {
-  font-size: 11px;
+  font-size: 20px;
   font-weight: 700;
   text-transform: uppercase;
   margin-bottom: 5px;
@@ -207,7 +241,7 @@
 }
 
 .pdf-logo_logo {
-  width: 400px;
+  width: 320px;
 }
 
 .pdf-logo-text {
@@ -249,7 +283,7 @@
   font-size: 11px;
   line-height: 1;
   white-space: pre-wrap;
-  min-height: 40px;
+  min-height: 30px;
   padding: 0;
   border-bottom: 1px solid #ddd;
 }
@@ -292,4 +326,122 @@
 
 .pdf-skill-value {
   font-weight: 700;
+}
+/* page 3 */
+.pdf-clock-img-box {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+}
+.pdf-stats-and-limit-main-box {
+  display: flex;
+  margin-top: 20px;
+}
+.pdf-stats-and-limit-main-box-inner {
+  width: 50%;
+  text-align: start;
+}
+.pdf-ol {
+  padding: 0 20px;
+}
+.pdf-ol li h3 {
+  margin-left: 30px;
+}
+.pdf-ol li {
+  padding: 8px 0px;
+}
+/* page 4 */
+.page4-pdf-header {
+  display: flex;
+  padding: 0px 0;
+
+  align-items: center;
+  justify-content: space-around;
+}
+.page4-pdf-subheader {
+  display: flex;
+  padding: 5px 0;
+  align-items: center;
+  justify-content: space-around;
+}
+.page4-pdf-subheader-inner-box {
+  position: relative;
+  text-align: center;
+}
+.page4-pdf-subheader-inner-box h4 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 10px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  color: black;
+}
+.page4-pdf-subheader-inner-box h4::before {
+  content: "";
+  height: 2px;
+  width: 20%;
+  position: absolute;
+  left: -45px;
+  background-color: #dddddd;
+  top: 25px;
+}
+.page4-pdf-subheader-inner-box h4::after {
+  content: "";
+  height: 2px;
+  width: 20%;
+  position: absolute;
+  right: -40px;
+  background-color: #dddddd;
+  top: 25px;
+}
+.page4-pdf-subheader-inner-box h6 {
+  font-size: 16px;
+  color: #666;
+  position: absolute;
+  font-weight: 400;
+  bottom: -45px;
+  left: -45px;
+}
+.page4-pdf-subheader-values-box {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  padding: 5px 0;
+
+  justify-content: space-around;
+  /* gap: 60px; */
+}
+.page4-pdf-subheader-values-inner-box {
+  text-align: center;
+}
+.page4-pdf-subheader-values-inner-box h4 {
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  color: black;
+}
+.page4-pdf-subheader-values-inner-box h6 {
+  font-size: 16px;
+  color: #666;
+  font-weight: 400;
+  margin: 0;
+}
+.page4-pdf-speclization-value-box {
+  margin-top: 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.page4-pdf-header-second {
+  justify-content: space-between;
+}
+.page4-pdf-header-second h3 {
+  margin-bottom: 0 !important;
+}
+.page4-pdf-speclization-value-inner-box {
+  height: 20px;
+  width: 200px;
+  border-bottom: 3px solid #ddd;
 }

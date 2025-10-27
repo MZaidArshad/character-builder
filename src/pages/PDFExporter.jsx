@@ -2,6 +2,12 @@ import React from "react";
 import { usePDF } from "react-to-pdf";
 import "./pdfExporter.css";
 import logo from "../assets/logo.png";
+import dice1 from "../assets/Capture-removebg-preview.png";
+import dice2 from "../assets/Capture-removebg-preview (1).png";
+import dice3 from "../assets/Capture-removebg-preview (2).png";
+import clock1 from "../assets/Capture-removebg-preview (3).png";
+import clock2 from "../assets/Capture-removebg-preview (4).png";
+import clock3 from "../assets/Capture-removebg-preview (5).png";
 const PDFExporter = ({
   character,
   calculateStamina,
@@ -240,7 +246,10 @@ const PDFExporter = ({
           </div>
 
           {/* Page 2 */}
-          <div className="pdf-page" style={{ pageBreakBefore: "always" }}>
+          <div
+            className="pdf-page pdf-skills-page"
+            style={{ pageBreakBefore: "always" }}
+          >
             <div className="pdf-date">
               {new Date().toLocaleDateString("en-US", {
                 month: "2-digit",
@@ -261,7 +270,7 @@ const PDFExporter = ({
               </h1>
             </div>
 
-            <div className="pdf-section">
+            <div className="pdf-section pdf-health-section">
               <h3 className="pdf-subsection-title">Health</h3>
 
               <div className="pdf-health-bar">
@@ -354,7 +363,7 @@ const PDFExporter = ({
               </div>
             </div>
 
-            <div className="pdf-section">
+            {/* <div className="pdf-section">
               <h2 className="pdf-section-title">Stats</h2>
               <div className="pdf-stats-grid">
                 {Object.entries(character.stats).map(([stat, value]) => (
@@ -366,9 +375,9 @@ const PDFExporter = ({
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
 
-            <div className="pdf-section">
+            {/* <div className="pdf-section">
               <h2 className="pdf-section-title">Skills</h2>
               <div className="pdf-skills-grid">
                 {Object.entries(character.skills).map(([skill, value]) => {
@@ -385,17 +394,21 @@ const PDFExporter = ({
                   );
                 })}
               </div>
-            </div>
+            </div> */}
 
             <div className="pdf-section">
-              <h2 className="pdf-section-title">Critical Injuries</h2>
+              <h2 className="pdf-section-title pdf-section-title-without-before">
+                Critical Injuries
+              </h2>
               <div className="pdf-text-content" style={{ minHeight: "60px" }}>
                 {character.textSections.injuries || ""}
               </div>
             </div>
 
             <div className="pdf-section">
-              <h2 className="pdf-section-title">Mental Injuries</h2>
+              <h2 className="pdf-section-title pdf-section-title-without-before">
+                Mental Injuries
+              </h2>
               <div
                 className="pdf-text-content"
                 style={{ minHeight: "60px" }}
@@ -404,7 +417,7 @@ const PDFExporter = ({
 
             <div className="pdf-section">
               <h3 className="pdf-subsection-title">Dice Roller</h3>
-              <div style={{ fontSize: "10px", marginBottom: "10px" }}>
+              <div className="pdf-dice-section-para">
                 HOVER OVER DICE NAMES TO SET DICE QUANTITY. LEFT CLICK ICONS TO
                 ROLL. RIGHT CLICK ICONS TO ADD TO POOL.
               </div>
@@ -412,27 +425,50 @@ const PDFExporter = ({
                 style={{
                   display: "flex",
                   gap: "40px",
-                  justifyContent: "center",
+                  justifyContent: "space-around",
                 }}
               >
-                <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: "24px" }}>▲</div>
-                  <div style={{ fontSize: "12px", fontWeight: "700" }}>D4</div>
+                <div
+                  style={{
+                    textAlign: "center",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "5px",
+                  }}
+                >
+                  <img src={dice1} style={{ fontSize: "24px" }}></img>
+                  <div className="pdf-dice-section-para">D4</div>
                 </div>
-                <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: "24px" }}>⬢</div>
-                  <div style={{ fontSize: "12px", fontWeight: "700" }}>D6</div>
+                <div
+                  style={{
+                    textAlign: "center",
+                    display: "flex",
+                    gap: "5px",
+
+                    alignItems: "center",
+                  }}
+                >
+                  <img src={dice2} style={{ fontSize: "24px" }}></img>
+                  <div className="pdf-dice-section-para">D6</div>
                 </div>
-                <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: "24px" }}>◆</div>
-                  <div style={{ fontSize: "12px", fontWeight: "700" }}>D8</div>
+                <div
+                  style={{
+                    textAlign: "center",
+                    gap: "5px",
+
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <img src={dice3} style={{ fontSize: "24px" }}></img>
+                  <div className="pdf-dice-section-para">D8</div>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Page 3 - Equipment & Spells */}
-          <div className="pdf-page" style={{ pageBreakBefore: "always" }}>
+          {/* <div className="pdf-page" style={{ pageBreakBefore: "always" }}>
             <div className="pdf-date">
               {new Date().toLocaleDateString("en-US", {
                 month: "2-digit",
@@ -479,6 +515,595 @@ const PDFExporter = ({
               <div className="pdf-text-content" style={{ minHeight: "100px" }}>
                 {character.textSections.items || ""}
               </div>
+            </div>
+          </div> */}
+          {/* Page 4 - Clocks, Stats, Skills */}
+          <div className="pdf-page">
+            <h3
+              className="pdf-subsection-title"
+              style={{ marginBottom: "15px", textAligns: "start" }}
+            >
+              CLOCKS
+            </h3>
+
+            <div className="pdf-clock-img-box">
+              <img src={clock1} alt="" />
+              <img src={clock2} alt="" />
+              <img src={clock3} alt="" />
+            </div>
+            <div className="pdf-stats-and-limit-main-box">
+              <div className="pdf-stats-and-limit-main-box-inner">
+                <h3
+                  className="pdf-subsection-title"
+                  style={{ marginBottom: "15px", textAligns: "start" }}
+                >
+                  STATS
+                </h3>
+                <p>
+                  Your active stats determine your character's capabilities in
+                  various situations.
+                </p>
+                <ol className="pdf-ol">
+                  <li>
+                    <h3
+                      className="pdf-health-label"
+                      style={{ marginBottom: "15px", textAligns: "start" }}
+                    >
+                      STR
+                    </h3>
+                  </li>
+                  <li>
+                    <h3
+                      className="pdf-health-label"
+                      style={{ marginBottom: "15px", textAligns: "start" }}
+                    >
+                      END
+                    </h3>
+                  </li>
+                  <li>
+                    <h3
+                      className="pdf-health-label"
+                      style={{ marginBottom: "15px", textAligns: "start" }}
+                    >
+                      DEX
+                    </h3>
+                  </li>
+                  <li>
+                    <h3
+                      className="pdf-health-label"
+                      style={{ marginBottom: "15px", textAligns: "start" }}
+                    >
+                      MND
+                    </h3>
+                  </li>
+                  <li>
+                    <h3
+                      className="pdf-health-label"
+                      style={{ marginBottom: "15px", textAligns: "start" }}
+                    >
+                      WIL
+                    </h3>
+                  </li>
+                  <li>
+                    <h3
+                      className="pdf-health-label"
+                      style={{ marginBottom: "15px", textAligns: "start" }}
+                    >
+                      SPR
+                    </h3>
+                  </li>
+                </ol>
+              </div>
+              <div className="pdf-stats-and-limit-main-box-inner">
+                <h3
+                  className="pdf-subsection-title"
+                  style={{ marginBottom: "15px", textAligns: "start" }}
+                >
+                  LIMITS
+                </h3>
+                <p>
+                  Your active stats determine your character's capabilities in
+                  various situations.
+                </p>
+                <ol className="pdf-ol">
+                  <li>
+                    <h3
+                      className="pdf-health-label"
+                      style={{ marginBottom: "15px", textAligns: "start" }}
+                    >
+                      STR
+                    </h3>
+                  </li>
+                  <li>
+                    <h3
+                      className="pdf-health-label"
+                      style={{ marginBottom: "15px", textAligns: "start" }}
+                    >
+                      END
+                    </h3>
+                  </li>
+                  <li>
+                    <h3
+                      className="pdf-health-label"
+                      style={{ marginBottom: "15px", textAligns: "start" }}
+                    >
+                      DEX
+                    </h3>
+                  </li>
+                  <li>
+                    <h3
+                      className="pdf-health-label"
+                      style={{ marginBottom: "15px", textAligns: "start" }}
+                    >
+                      MND
+                    </h3>
+                  </li>
+                  <li>
+                    <h3
+                      className="pdf-health-label"
+                      style={{ marginBottom: "15px", textAligns: "start" }}
+                    >
+                      WIL
+                    </h3>
+                  </li>
+                  <li>
+                    <h3
+                      className="pdf-health-label"
+                      style={{ marginBottom: "15px", textAligns: "start" }}
+                    >
+                      SPR
+                    </h3>
+                  </li>
+                </ol>
+              </div>
+            </div>
+            <h3
+              className="pdf-subsection-title"
+              style={{ marginBottom: "15px", textAligns: "start" }}
+            >
+              Skills
+            </h3>
+            <p style={{ textAlign: "start" }}>
+              Skills represent learned abilities your character has acquired
+            </p>
+          </div>
+          {/* page 4 */}
+          <div className="pdf-page">
+            <div className="page4-pdf-header">
+              <h3
+                className="pdf-subsection-title"
+                style={{ marginBottom: "15px", textAligns: "start" }}
+              >
+                STRNGTH
+              </h3>
+              <h3
+                className="pdf-subsection-title"
+                style={{ marginBottom: "15px", textAligns: "start" }}
+              >
+                ENDURANCE
+              </h3>
+              <h3
+                className="pdf-subsection-title"
+                style={{ marginBottom: "15px", textAligns: "start" }}
+              >
+                DEXTERITY
+              </h3>
+            </div>
+            <div className="page4-pdf-subheader">
+              <div className="page4-pdf-subheader-inner-box">
+                <h4>// ATHLETICS //</h4>
+                <h6>DEX</h6>
+              </div>
+              <div className="page4-pdf-subheader-inner-box">
+                <h4>/// HUNTING ///</h4>
+                <h6>MND</h6>
+              </div>
+              <div className="page4-pdf-subheader-inner-box">
+                <h4>// BLADES //</h4>
+                <h6>DEX</h6>
+              </div>
+            </div>
+            <div className="page4-pdf-subheader-values-box">
+              <div className="page4-pdf-subheader-values-inner-box">
+                <h4>BASE</h4>
+                <h6>1</h6>
+              </div>
+              <div className="page4-pdf-subheader-values-inner-box">
+                <h4>BASE</h4>
+                <h6>1</h6>
+              </div>
+              <div className="page4-pdf-subheader-values-inner-box">
+                <h4>BASE</h4>
+                <h6>1</h6>
+              </div>
+            </div>
+            <div className="page4-pdf-header page4-pdf-header-second">
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                SPECILIZATION
+              </h3>
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                SPECILIZATION
+              </h3>
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                SPECILIZATION
+              </h3>
+            </div>
+            <div className="page4-pdf-speclization-value-box">
+              <div className="page4-pdf-speclization-value-inner-box"></div>
+              <div className="page4-pdf-speclization-value-inner-box"></div>
+              <div className="page4-pdf-speclization-value-inner-box"></div>
+            </div>
+            <div className="page4-pdf-subheader">
+              <div className="page4-pdf-subheader-inner-box">
+                <h4>// BLUNT //</h4>
+                <h6>DEX</h6>
+              </div>
+              <div className="page4-pdf-subheader-inner-box">
+                <h4>// SCAVENGING //</h4>
+                <h6>MND</h6>
+              </div>
+              <div className="page4-pdf-subheader-inner-box">
+                <h4>// CORRDINATION //</h4>
+                <h6>DEX</h6>
+              </div>
+            </div>
+            <div className="page4-pdf-subheader-values-box">
+              <div className="page4-pdf-subheader-values-inner-box">
+                <h4>BASE</h4>
+                <h6>1</h6>
+              </div>
+              <div className="page4-pdf-subheader-values-inner-box">
+                <h4>BASE</h4>
+                <h6>1</h6>
+              </div>
+              <div className="page4-pdf-subheader-values-inner-box">
+                <h4>BASE</h4>
+                <h6>1</h6>
+              </div>
+            </div>
+            <div className="page4-pdf-header page4-pdf-header-second">
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                SPECILIZATION
+              </h3>
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                SPECILIZATION
+              </h3>
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                SPECILIZATION
+              </h3>
+            </div>
+            <div className="page4-pdf-speclization-value-box">
+              <div className="page4-pdf-speclization-value-inner-box"></div>
+              <div className="page4-pdf-speclization-value-inner-box"></div>
+              <div className="page4-pdf-speclization-value-inner-box"></div>
+            </div>
+
+            <div className="page4-pdf-subheader">
+              <div className="page4-pdf-subheader-inner-box">
+                <h4>// TRAVERSAL //</h4>
+                <h6>DEX</h6>
+              </div>
+              <div className="page4-pdf-subheader-inner-box">
+                <h4>// VITALITY //</h4>
+                <h6>MND</h6>
+              </div>
+              <div className="page4-pdf-subheader-inner-box">
+                <h4>// STEALTH //</h4>
+                <h6>DEX</h6>
+              </div>
+            </div>
+            <div className="page4-pdf-subheader-values-box">
+              <div className="page4-pdf-subheader-values-inner-box">
+                <h4>BASE</h4>
+                <h6>1</h6>
+              </div>
+              <div className="page4-pdf-subheader-values-inner-box">
+                <h4>BASE</h4>
+                <h6>1</h6>
+              </div>
+              <div className="page4-pdf-subheader-values-inner-box">
+                <h4>BASE</h4>
+                <h6>1</h6>
+              </div>
+            </div>
+            <div className="page4-pdf-header page4-pdf-header-second">
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                SPECILIZATION
+              </h3>
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                SPECILIZATION
+              </h3>
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                SPECILIZATION
+              </h3>
+            </div>
+            <div className="page4-pdf-speclization-value-box">
+              <div className="page4-pdf-speclization-value-inner-box"></div>
+              <div className="page4-pdf-speclization-value-inner-box"></div>
+              <div className="page4-pdf-speclization-value-inner-box"></div>
+            </div>
+          </div>
+          {/* End of PDF Pages */}
+          {/* page 5 */}
+          <div className="pdf-page">
+            <div className="page4-pdf-header">
+              <h3
+                className="pdf-subsection-title"
+                style={{ marginBottom: "15px", textAligns: "start" }}
+              >
+                MIND
+              </h3>
+              <h3
+                className="pdf-subsection-title"
+                style={{ marginBottom: "15px", textAligns: "start" }}
+              >
+                WILL POWER
+              </h3>
+              <h3
+                className="pdf-subsection-title"
+                style={{ marginBottom: "15px", textAligns: "start" }}
+              >
+                SPIRIT
+              </h3>
+            </div>
+            <div className="page4-pdf-subheader">
+              <div className="page4-pdf-subheader-inner-box">
+                <h4>// AWARENCE //</h4>
+                <h6>DEX</h6>
+              </div>
+              <div className="page4-pdf-subheader-inner-box">
+                <h4>// COMMUNCIATION //</h4>
+                <h6>MND</h6>
+              </div>
+              <div className="page4-pdf-subheader-inner-box">
+                <h4>// CHANNELING //</h4>
+                <h6>DEX</h6>
+              </div>
+            </div>
+            <div className="page4-pdf-subheader-values-box">
+              <div className="page4-pdf-subheader-values-inner-box">
+                <h4>BASE</h4>
+                <h6>1</h6>
+              </div>
+              <div className="page4-pdf-subheader-values-inner-box">
+                <h4>BASE</h4>
+                <h6>1</h6>
+              </div>
+              <div className="page4-pdf-subheader-values-inner-box">
+                <h4>BASE</h4>
+                <h6>1</h6>
+              </div>
+            </div>
+            <div className="page4-pdf-header page4-pdf-header-second">
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                SPECILIZATION
+              </h3>
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                SPECILIZATION
+              </h3>
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                SPECILIZATION
+              </h3>
+            </div>
+            <div className="page4-pdf-speclization-value-box">
+              <div className="page4-pdf-speclization-value-inner-box"></div>
+              <div className="page4-pdf-speclization-value-inner-box"></div>
+              <div className="page4-pdf-speclization-value-inner-box"></div>
+            </div>
+            <div className="page4-pdf-subheader">
+              <div className="page4-pdf-subheader-inner-box">
+                <h4>// BLUNT //</h4>
+                <h6>DEX</h6>
+              </div>
+              <div className="page4-pdf-subheader-inner-box">
+                <h4>// SCAVENGING //</h4>
+                <h6>MND</h6>
+              </div>
+              <div className="page4-pdf-subheader-inner-box">
+                <h4>// CORRDINATION //</h4>
+                <h6>DEX</h6>
+              </div>
+            </div>
+            <div className="page4-pdf-subheader-values-box">
+              <div className="page4-pdf-subheader-values-inner-box">
+                <h4>BASE</h4>
+                <h6>1</h6>
+              </div>
+              <div className="page4-pdf-subheader-values-inner-box">
+                <h4>BASE</h4>
+                <h6>1</h6>
+              </div>
+              <div className="page4-pdf-subheader-values-inner-box">
+                <h4>BASE</h4>
+                <h6>1</h6>
+              </div>
+            </div>
+            <div className="page4-pdf-header page4-pdf-header-second">
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                SPECILIZATION
+              </h3>
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                SPECILIZATION
+              </h3>
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                SPECILIZATION
+              </h3>
+            </div>
+            <div className="page4-pdf-speclization-value-box">
+              <div className="page4-pdf-speclization-value-inner-box"></div>
+              <div className="page4-pdf-speclization-value-inner-box"></div>
+              <div className="page4-pdf-speclization-value-inner-box"></div>
+            </div>
+
+            <div className="page4-pdf-subheader">
+              <div className="page4-pdf-subheader-inner-box">
+                <h4>// TRAVERSAL //</h4>
+                <h6>DEX</h6>
+              </div>
+              <div className="page4-pdf-subheader-inner-box">
+                <h4>// VITALITY //</h4>
+                <h6>MND</h6>
+              </div>
+              <div className="page4-pdf-subheader-inner-box">
+                <h4>// STEALTH //</h4>
+                <h6>DEX</h6>
+              </div>
+            </div>
+            <div className="page4-pdf-subheader-values-box">
+              <div className="page4-pdf-subheader-values-inner-box">
+                <h4>BASE</h4>
+                <h6>1</h6>
+              </div>
+              <div className="page4-pdf-subheader-values-inner-box">
+                <h4>BASE</h4>
+                <h6>1</h6>
+              </div>
+              <div className="page4-pdf-subheader-values-inner-box">
+                <h4>BASE</h4>
+                <h6>1</h6>
+              </div>
+            </div>
+            <div className="page4-pdf-header page4-pdf-header-second">
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                SPECILIZATION
+              </h3>
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                SPECILIZATION
+              </h3>
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                SPECILIZATION
+              </h3>
+            </div>
+            <div className="page4-pdf-speclization-value-box">
+              <div className="page4-pdf-speclization-value-inner-box"></div>
+              <div className="page4-pdf-speclization-value-inner-box"></div>
+              <div className="page4-pdf-speclization-value-inner-box"></div>
             </div>
           </div>
         </div>
