@@ -168,7 +168,7 @@
   justify-content: space-between;
   margin: 15px 0;
   padding: 10px;
-  border: 2px solid #000;
+  /* border: 2px solid #000; */
 }
 
 .pdf-health-item {
@@ -247,10 +247,10 @@
 
 .pdf-text-content {
   font-size: 11px;
-  line-height: 1.4;
+  line-height: 1;
   white-space: pre-wrap;
   min-height: 40px;
-  padding: 8px 0;
+  padding: 0;
   border-bottom: 1px solid #ddd;
 }
 
