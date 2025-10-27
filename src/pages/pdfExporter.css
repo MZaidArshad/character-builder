@@ -1,0 +1,295 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+.pdf-container {
+  font-family: "Inter", sans-serif;
+  width: 8.5in;
+  background: white;
+}
+
+.pdf-page {
+  font-family: "Inter", sans-serif;
+  width: 8.5in;
+  min-height: 11in;
+  padding: 0.5in;
+  background: white;
+  color: #000;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+.pdf-header {
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 3px solid #000;
+  padding-bottom: 10px;
+}
+.pdf-main-header {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 28px;
+  font-weight: 900 !important;
+  padding-bottom: 10px;
+}
+
+.pdf-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 20px 0 5px 0;
+  letter-spacing: 1px;
+}
+
+.pdf-date {
+  font-size: 11px;
+  color: #333;
+  position: absolute;
+  top: 0.5in;
+  left: 0.5in;
+}
+
+.pdf-sheet-title {
+  font-size: 11px;
+  color: #333;
+  position: absolute;
+  top: 0.5in;
+  right: 0.5in;
+}
+
+.pdf-section {
+  margin-bottom: 25px;
+  text-align: left;
+}
+.margin-top {
+  margin-top: 40px;
+}
+
+.grid-2-columns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.pdf-section-title {
+  font-size: 22px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: left;
+  margin: 0 0 8px 0;
+  padding-bottom: 5px;
+  padding-left: 15px;
+  /* border-bottom: 4px solid #000; */
+  letter-spacing: 0.5px;
+  position: relative;
+}
+
+.pdf-section-title::after {
+  content: "";
+  height: 1px;
+  width: 200%;
+  background-color: rgb(201, 201, 201);
+  position: absolute;
+  right: -100%;
+  bottom: -5px;
+}
+.pdf-section-title::before {
+  content: "";
+  height: 4px;
+  width: 40%;
+  background-color: #000000;
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+}
+
+.pdf-subsection-title {
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 15px 0 0px 0;
+  color: #999;
+  letter-spacing: 0.5px;
+}
+
+.pdf-two-column {
+  display: flex;
+  gap: 30px;
+}
+
+.pdf-column {
+  flex: 1;
+}
+
+.pdf-field {
+  margin-bottom: 15px;
+}
+
+.pdf-field-label {
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+  letter-spacing: 0.3px;
+}
+
+.pdf-field-value {
+  font-size: 14px;
+  padding: 5px 0;
+  border-bottom: 1px solid #ddd;
+  min-height: 24px;
+}
+
+.pdf-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 20px;
+  margin-top: 10px;
+}
+
+.pdf-stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.pdf-stat-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.pdf-stat-value {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.pdf-health-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 15px 0;
+  padding: 10px;
+  border: 2px solid #000;
+}
+
+.pdf-health-item {
+  text-align: center;
+  flex: 1;
+}
+
+.pdf-health-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.pdf-health-value {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.pdf-health-fraction {
+  font-size: 16px;
+}
+
+.pdf-health-note {
+  font-size: 9px;
+  color: #666;
+  margin-top: 3px;
+  max-width: 150px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pdf-logo {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.pdf-logo_logo {
+  width: 400px;
+}
+
+.pdf-logo-text {
+  font-size: 48px;
+  font-weight: 700;
+  color: #8b4513;
+  text-shadow: 2px 2px 0px #d4af37;
+  font-style: italic;
+}
+
+.pdf-fame-grid {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  margin: 20px 0;
+}
+
+.pdf-fame-item {
+  text-align: center;
+}
+
+.pdf-fame-label {
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.pdf-fame-value {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.pdf-text-area {
+  margin-bottom: 15px;
+}
+
+.pdf-text-content {
+  font-size: 11px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  min-height: 40px;
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.pdf-footer {
+  margin-top: 30px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+  font-size: 9px;
+  color: #666;
+}
+
+.pdf-footer-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  color: #999;
+}
+
+.pdf-skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 20px;
+  margin-top: 10px;
+}
+
+.pdf-skill-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+  font-size: 11px;
+}
+
+.pdf-skill-name {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.pdf-skill-value {
+  font-weight: 700;
+}
