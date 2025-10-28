@@ -1106,6 +1106,101 @@ const PDFExporter = ({
               <div className="page4-pdf-speclization-value-inner-box"></div>
             </div>
           </div>
+          {/* page 6 */}
+          <div className="pdf-page">
+            <div className="pdf-header">
+              <h1 className="pdf-title" style={{ fontSize: "24px" }}>
+                SPELLS & ABILITES
+              </h1>
+            </div>
+            <div className="Pdf-page6-sub-header">
+              <div className="Pdf-page6-sub-header-inner-box">
+                <h3
+                  className="pdf-subsection-title"
+                  style={{ marginBottom: "5px" }}
+                >
+                  SHORTHAND
+                </h3>
+                <div className="page4-inner-content-box"></div>
+                <div className="page4-inner-content-box"></div>
+                <div className="page4-inner-content-box"></div>
+                <div className="page4-inner-content-box"></div>
+              </div>
+              <div className="Pdf-page6-sub-header-inner-box">
+                <h3
+                  className="pdf-subsection-title"
+                  style={{ marginBottom: "5px" }}
+                >
+                  FUNDAMENTALS
+                </h3>
+                <div className="page4-inner-content-box"></div>
+                <div className="page4-inner-content-box"></div>
+                <div className="page4-inner-content-box"></div>
+                <div className="page4-inner-content-box"></div>
+              </div>
+            </div>
+            <div className="Pdf-page6-sub-header">
+              <div className="Pdf-page6-sub-header-inner-box">
+                <h3
+                  className="pdf-subsection-title"
+                  style={{ marginBottom: "5px" }}
+                >
+                  MODIFIRES
+                </h3>
+                <div className="page4-inner-content-box"></div>
+                <div className="page4-inner-content-box"></div>
+                <div className="page4-inner-content-box"></div>
+                <div className="page4-inner-content-box"></div>
+              </div>
+              <div className="Pdf-page6-sub-header-inner-box">
+                <h3
+                  className="pdf-subsection-title"
+                  style={{ marginBottom: "5px" }}
+                >
+                  REFFERALS
+                </h3>
+                <div className="page4-inner-content-box"></div>
+                <div className="page4-inner-content-box"></div>
+                <div className="page4-inner-content-box"></div>
+                <div className="page4-inner-content-box"></div>
+              </div>
+            </div>
+            <div className="Pdf-page6-sub-header">
+              <div className="Pdf-page6-sub-header-inner-box">
+                <h3
+                  className="pdf-subsection-title"
+                  style={{ marginBottom: "5px" }}
+                >
+                  CONDITIONS
+                </h3>
+                <div className="page4-inner-content-box"></div>
+                <div className="page4-inner-content-box"></div>
+                <div className="page4-inner-content-box"></div>
+                <div className="page4-inner-content-box"></div>
+              </div>
+              <div className="Pdf-page6-sub-header-inner-box">
+                <h3
+                  className="pdf-subsection-title"
+                  style={{ marginBottom: "5px" }}
+                >
+                  ABLITIES
+                </h3>
+                <div className="page4-inner-content-box"></div>
+                <div className="page4-inner-content-box"></div>
+                <div className="page4-inner-content-box"></div>
+                <div className="page4-inner-content-box"></div>
+              </div>
+            </div>
+          </div>
+          {/* page-7 */}
+          <div className="pdf-page">
+            <div className="pdf-header">
+              <h1 className="pdf-title" style={{ fontSize: "24px" }}>
+                EQUIMENTS
+              </h1>
+            </div>
+            <h3 className="pdf-subsection-title">LIVING</h3>
+          </div>
         </div>
       </div>
     </>

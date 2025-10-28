@@ -445,3 +445,19 @@
   width: 200px;
   border-bottom: 3px solid #ddd;
 }
+/* page 6 */
+.Pdf-page6-sub-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.Pdf-page6-sub-header-inner-box {
+  width: 48%;
+}
+.page4-inner-content-box {
+  height: 40px;
+  width: 100%;
+  border-bottom: 3px solid #ddd;
+}
+/* page 7 */
