@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
+import logo from "../assets/logo2.png";
 
 const compendiumData = [
   {
@@ -211,27 +212,17 @@ export default function WillWhispersCompendium() {
   return (
     <>
       <style>{`
-        * {
-          box-sizing: border-box;
-          margin: 0;
-          padding: 0;
-        }
 
-        body {
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-          background: #0f1419;
-          color: #e0e6ed;
-          line-height: 1.6;
-        }
-  
+      
+
         .header {
-          background: #1e2738;
+          background: #ffe974;
           padding: 24px 20px;
-          border-bottom: 2px solid #2196f3;
+          border-bottom: 3px solid #d53d22;
           position: sticky;
           top: 0;
           z-index: 100;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 2px 8px rgba(213, 61, 34, 0.15);
         }
 
         .header-container {
@@ -245,6 +236,14 @@ export default function WillWhispersCompendium() {
           align-items: center;
           margin-bottom: 20px;
         }
+        .header_links_container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        
+          flex: 1
+         
+        }
 
         .header-branding {
           display: flex;
@@ -253,36 +252,39 @@ export default function WillWhispersCompendium() {
         }
 
         h1 {
-          color: #64b5f6;
+          color: #000000;
           font-size: 2em;
           font-weight: 700;
           margin: 0;
         }
 
         .header-subtitle {
-          color: #90a4ae;
+          color: #d53d22;
           font-size: 0.9em;
           margin-top: 2px;
+          font-weight: 500;
         }
 
         .header-link {
-          color: #64b5f6;
+          color: #000000;
           text-decoration: none;
           display: inline-flex;
           align-items: center;
           gap: 8px;
           padding: 10px 20px;
-          background: #0f1922;
-          border: 1px solid #2d3548;
+          background: #ffffff;
+          border: 2px solid #d53d22;
           border-radius: 6px;
           font-size: 0.9em;
+          font-weight: 600;
           transition: all 0.3s;
         }
 
         .header-link:hover {
-          background: #1a2332;
-          border-color: #2196f3;
+          background: #d53d22;
+          color: #ffffff;
           transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(213, 61, 34, 0.3);
         }
 
         .search-bar {
@@ -293,24 +295,24 @@ export default function WillWhispersCompendium() {
         }
 
         .search-bar input {
-          width: 100%;
+          width: 85%;
           padding: 14px 50px 14px 20px;
           font-size: 0.95em;
-          border: 1px solid #37474f;
+          border: 2px solid #d53d22;
           border-radius: 8px;
-          background: #0f1419;
-          color: #e0e6ed;
+          background: #ffffff;
+          color: #000000;
           outline: none;
           transition: all 0.3s;
         }
 
         .search-bar input:focus {
-          border-color: #2196f3;
-          box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+          border-color: #d53d22;
+          box-shadow: 0 0 0 3px rgba(213, 61, 34, 0.15);
         }
 
         .search-bar input::placeholder {
-          color: #78909c;
+          color: #666666;
         }
 
         .search-icon {
@@ -318,26 +320,27 @@ export default function WillWhispersCompendium() {
           right: 18px;
           top: 50%;
           transform: translateY(-50%);
-          color: #64b5f6;
+          color: #d53d22;
           font-size: 1.2em;
           pointer-events: none;
         }
 
         .mobile-menu-btn {
           display: none;
-          background: #0f1922;
-          border: 1px solid #2d3548;
-          color: #64b5f6;
+          background: #ffffff;
+          border: 2px solid #d53d22;
+          color: #d53d22;
           padding: 10px 16px;
           border-radius: 6px;
           cursor: pointer;
           font-size: 1.2em;
+          font-weight: 600;
           transition: all 0.3s;
         }
 
         .mobile-menu-btn:hover {
-          background: #1a2332;
-          border-color: #2196f3;
+          background: #d53d22;
+          color: #ffffff;
         }
 
         .sidebar-overlay {
@@ -347,7 +350,7 @@ export default function WillWhispersCompendium() {
           left: 0;
           right: 0;
           bottom: 0;
-          background: rgba(0, 0, 0, 0.7);
+          background: rgba(0, 0, 0, 0.5);
           z-index: 998;
           animation: fadeIn 0.3s;
         }
@@ -356,27 +359,29 @@ export default function WillWhispersCompendium() {
           display: block;
         }
 
-        .container {
+        .com-container {
           display: flex;
           max-width: 1400px;
           margin: 0 auto;
           min-height: calc(100vh - 180px);
           gap: 20px;
           padding: 20px;
+          width: 90vw;
+          background: #ffffff;
         }
 
         .sidebar {
           width: 280px;
-          background: #1a2332;
+          background: #ffe974;
           padding: 20px;
           border-radius: 12px;
-          border: 1px solid #2d3548;
+          border: 2px solid #d53d22;
           position: sticky;
           top: 200px;
           height: fit-content;
           max-height: calc(100vh - 220px);
           overflow-y: auto;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 4px 12px rgba(213, 61, 34, 0.15);
           transition: all 0.3s;
         }
 
@@ -385,24 +390,24 @@ export default function WillWhispersCompendium() {
         }
 
         .sidebar::-webkit-scrollbar-track {
-          background: #0f1419;
+          background: #ffffff;
           border-radius: 3px;
         }
 
         .sidebar::-webkit-scrollbar-thumb {
-          background: #37474f;
+          background: #d53d22;
           border-radius: 3px;
         }
 
         .sidebar::-webkit-scrollbar-thumb:hover {
-          background: #455a64;
+          background: #b33220;
         }
 
         .sidebar h3 {
-          color: #64b5f6;
+          color: #000000;
           margin-bottom: 16px;
           font-size: 1.2em;
-          font-weight: 600;
+          font-weight: 700;
           display: flex;
           align-items: center;
           gap: 8px;
@@ -420,24 +425,25 @@ export default function WillWhispersCompendium() {
           transition: all 0.2s;
           border-left: 3px solid transparent;
           font-size: 0.95em;
-          color: #b0bec5;
+          color: #000000;
           display: flex;
           align-items: center;
           gap: 10px;
+          background: rgba(255, 255, 255, 0.5);
         }
 
         .category-list li:hover {
-          background: #0f1922;
-          border-left-color: #2196f3;
-          color: #e0e6ed;
+          background: #ffffff;
+          border-left-color: #d53d22;
           transform: translateX(4px);
+          box-shadow: 0 2px 4px rgba(213, 61, 34, 0.1);
         }
 
         .category-list li.active {
-          background: #1e3a5f;
-          border-left-color: #2196f3;
-          color: #64b5f6;
-          font-weight: 600;
+          background: #d53d22;
+          border-left-color: #000000;
+          color: #ffffff;
+          font-weight: 700;
         }
 
         .category-icon {
@@ -450,20 +456,21 @@ export default function WillWhispersCompendium() {
         }
 
         .content-header {
-          background: #1a2332;
+          background: #ffe974;
           padding: 20px 24px;
           border-radius: 12px;
-          border: 1px solid #2d3548;
+          border: 2px solid #d53d22;
           margin-bottom: 20px;
           display: flex;
           justify-content: space-between;
           align-items: center;
+          box-shadow: 0 2px 6px rgba(213, 61, 34, 0.1);
         }
 
         .content-header h2 {
-          color: #64b5f6;
+          color: #000000;
           font-size: 1.5em;
-          font-weight: 600;
+          font-weight: 700;
           display: flex;
           align-items: center;
           gap: 12px;
@@ -471,27 +478,28 @@ export default function WillWhispersCompendium() {
         }
 
         .results-count {
-          color: #90a4ae;
+          color: #ffffff;
           font-size: 0.9em;
-          background: #0f1922;
+          background: #d53d22;
           padding: 6px 14px;
           border-radius: 20px;
+          font-weight: 600;
         }
 
         .entry {
-          background: #1a2332;
+          background: #ffffff;
           padding: 28px;
           margin-bottom: 20px;
           border-radius: 12px;
-          border: 1px solid #2d3548;
+          border: 2px solid #d53d22;
           animation: fadeIn 0.4s ease-out;
           transition: all 0.3s;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 2px 8px rgba(213, 61, 34, 0.1);
         }
 
         .entry:hover {
-          border-color: #2196f3;
-          box-shadow: 0 4px 16px rgba(33, 150, 243, 0.15);
+          border-color: #d53d22;
+          box-shadow: 0 4px 16px rgba(213, 61, 34, 0.2);
           transform: translateY(-2px);
         }
 
@@ -507,12 +515,12 @@ export default function WillWhispersCompendium() {
         }
 
         .entry h2 {
-          color: #64b5f6;
+          color: #000000;
           font-size: 1.8em;
           margin-bottom: 14px;
-          font-weight: 600;
+          font-weight: 700;
           padding-bottom: 12px;
-          border-bottom: 2px solid #2d5a8c;
+          border-bottom: 3px solid #ffe974;
         }
 
         .entry-tags {
@@ -523,23 +531,23 @@ export default function WillWhispersCompendium() {
         }
 
         .tag {
-          background: #1e3a5f;
-          color: #90caf9;
+          background: #ffe974;
+          color: #000000;
           padding: 6px 14px;
           border-radius: 6px;
           font-size: 0.85em;
-          border: 1px solid #2d5a8c;
-          font-weight: 500;
+          border: 2px solid #d53d22;
+          font-weight: 600;
           transition: all 0.2s;
         }
 
         .tag:hover {
-          background: #2d5a8c;
-          color: #e3f2fd;
+          background: #d53d22;
+          color: #ffffff;
         }
 
         .entry-content {
-          color: #b0bec5;
+          color: #000000;
         }
 
         .entry-content p {
@@ -549,11 +557,11 @@ export default function WillWhispersCompendium() {
         }
 
         .entry-content h3 {
-          color: #64b5f6;
+          color: #d53d22;
           margin-top: 24px;
           margin-bottom: 12px;
           font-size: 1.3em;
-          font-weight: 600;
+          font-weight: 700;
         }
 
         .entry-content ul,
@@ -569,20 +577,22 @@ export default function WillWhispersCompendium() {
         }
 
         .entry-content strong {
-          color: #90caf9;
-          font-weight: 600;
+          color: #000000;
+          font-weight: 700;
         }
 
         .tooltip-word {
-          color: #64b5f6;
+          color: #d53d22;
           cursor: help;
-          border-bottom: 2px dotted #2196f3;
+          border-bottom: 2px dotted #000000;
           position: relative;
           transition: all 0.2s;
+          font-weight: 600;
         }
 
         .tooltip-word:hover {
-          color: #90caf9;
+          color: #000000;
+          border-bottom-color: #d53d22;
         }
 
         .tooltip-word:hover::after {
@@ -591,17 +601,18 @@ export default function WillWhispersCompendium() {
           bottom: 100%;
           left: 50%;
           transform: translateX(-50%);
-          background: #0f1419;
-          color: #e0e6ed;
+          background: #000000;
+          color: #ffe974;
           padding: 10px 16px;
           border-radius: 8px;
-          border: 1px solid #2196f3;
+          border: 2px solid #ffe974;
           white-space: nowrap;
           z-index: 1000;
           font-size: 0.85em;
           margin-bottom: 8px;
-          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
           animation: tooltipFade 0.2s;
+          font-weight: 500;
         }
 
         @keyframes tooltipFade {
@@ -619,7 +630,7 @@ export default function WillWhispersCompendium() {
           margin: 24px 0;
           border-radius: 12px;
           overflow: hidden;
-          border: 1px solid #2d3548;
+          border: 2px solid #d53d22;
         }
 
         .media-container img {
@@ -629,26 +640,26 @@ export default function WillWhispersCompendium() {
         }
 
         .external-link {
-          color: #64b5f6;
+          color: #d53d22;
           text-decoration: none;
-          border-bottom: 1px solid #2196f3;
+          border-bottom: 2px solid #ffe974;
           transition: all 0.2s;
-          font-weight: 500;
+          font-weight: 600;
         }
 
         .external-link:hover {
-          color: #90caf9;
-          border-bottom-color: #64b5f6;
+          color: #000000;
+          border-bottom-color: #d53d22;
         }
 
         .no-results {
           text-align: center;
           padding: 80px 20px;
-          color: #78909c;
+          color: #666666;
           font-size: 1.1em;
-          background: #1a2332;
+          background: #ffffff;
           border-radius: 12px;
-          border: 1px solid #2d3548;
+          border: 2px solid #d53d22;
         }
 
         .no-results-icon {
@@ -658,7 +669,7 @@ export default function WillWhispersCompendium() {
         }
 
         @media (max-width: 968px) {
-          .container {
+          .com-container  {
             flex-direction: column;
             padding: 15px;
           }
@@ -674,7 +685,7 @@ export default function WillWhispersCompendium() {
             border-radius: 0;
             z-index: 999;
             transition: left 0.3s ease-in-out;
-            border-right: 2px solid #2196f3;
+            border-right: 2px solid #ffe974;
           }
 
           .sidebar.open {
@@ -693,15 +704,52 @@ export default function WillWhispersCompendium() {
         }
 
         @media (max-width: 768px) {
+
+         .com-container  {
+               width: 90%;
+          }
+
           h1 {
             font-size: 1.5em;
           }
+            .header{
+            padding-botttom: 10px
+            }
 
           .header-top {
             flex-direction: column;
             gap: 12px;
             align-items: flex-start;
           }
+          .header_links_container {
+           flex-wrap: wrap;
+           width: 100%;
+          }
+
+          .search-bar {
+          // max-width: 230px;
+          width: 82%;
+          margin: 0;
+          position: relative;
+          
+        }
+
+        .search-bar input {
+          width: 95%;
+          padding: 10px 50px 10px 10px;
+          font-size: 0.9em;
+ 
+          flex-grow: 1;
+        }
+
+         .search-icon {
+       
+          right: -25px;
+        
+      
+      
+        }
+
 
           .entry {
             padding: 20px;
@@ -718,29 +766,32 @@ export default function WillWhispersCompendium() {
           <div className="header-top">
             <div className="header-branding">
               <div>
-                <h1>Will & Whispers</h1>
-                <p className="header-subtitle">Game Compendium</p>
+                {/* <h1>Will & Whispers</h1> */}
+                <img src={logo} alt="" style={{ width: "150px" }} />
+                {/* <p className="header-subtitle">Game Compendium</p> */}
               </div>
             </div>
-            <Link to="/builder" className="header-link">
-              <span>⚡</span>
-              Character Builder
-            </Link>
-            <button
-              className="mobile-menu-btn"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-            >
-              {sidebarOpen ? "✕" : "☰"}
-            </button>
-          </div>
-          <div className="search-bar">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search entries, tags, or content..."
-            />
-            <span className="search-icon">🔍</span>
+            <div className="header_links_container">
+              <div className="search-bar">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search entries, tags, or content..."
+                />
+                <span className="search-icon">🔍</span>
+              </div>
+              <Link to="/builder" className="header-link">
+                <span>⚡</span>
+                Character Builder
+              </Link>
+              <button
+                className="mobile-menu-btn"
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+              >
+                {sidebarOpen ? "✕" : "☰"}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -750,7 +801,7 @@ export default function WillWhispersCompendium() {
         onClick={() => setSidebarOpen(false)}
       />
 
-      <div className="container">
+      <div className="com-container ">
         <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
           <h3>
             <span>📂</span>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import PDFExporter from "./PDFExporter";
 import { Link } from "react-router-dom";
-import "./characterBuilder.css";
+// import "./characterBuilder.css";
 const CharacterBuilder = () => {
   const initialCharacter = {
     name: "",
@@ -334,7 +334,7 @@ const CharacterBuilder = () => {
     <>
       <Link to="/">Compendium page</Link>
       <div style={styles.container}>
-        <header style={styles.header} className="builder-header">
+        <header style={styles.header}>
           <h1 style={styles.title}>Will & Whispers Character Builder</h1>
           <div style={styles.headerButtons}>
             <button
@@ -747,17 +747,17 @@ const CharacterBuilder = () => {
 
 const styles = {
   container: {
-    maxWidth: "1400px",
+    maxWidth: "1200px",
     width: "80vw",
     margin: "0 auto",
     padding: "20px",
     fontFamily: "Arial, sans-serif",
-    background: "#ffffff",
+    background: "linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%)",
     minHeight: "100vh",
   },
   header: {
-    backgroundColor: "#ffe974",
-    color: "#000000",
+    backgroundColor: "#1e2738",
+    color: "#e0e6ed",
     padding: "20px",
     borderRadius: "8px",
     marginBottom: "20px",
@@ -765,16 +765,14 @@ const styles = {
     justifyContent: "space-between",
     alignItems: "center",
     flexWrap: "wrap",
-    border: "2px solid #d53d22",
+    border: "1px solid #2d3548",
     flexDirection: "column",
-    boxShadow: "0 4px 8px rgba(213, 61, 34, 0.15)",
   },
   title: {
     margin: 0,
     fontSize: "28px",
-    color: "#000000",
+    color: "#64b5f6",
     marginBottom: "15px",
-    fontWeight: "700",
   },
   headerButtons: {
     display: "flex",
@@ -783,7 +781,7 @@ const styles = {
   },
   btn: {
     padding: "10px 20px",
-    border: "2px solid #d53d22",
+    border: "none",
     borderRadius: "4px",
     cursor: "pointer",
     fontSize: "14px",
@@ -791,20 +789,19 @@ const styles = {
     transition: "all 0.2s",
   },
   btnPrimary: {
-    backgroundColor: "#d53d22",
+    backgroundColor: "#2196f3",
     color: "#ffffff",
   },
   btnSecondary: {
-    backgroundColor: "#ffffff",
-    color: "#000000",
+    backgroundColor: "#546e7a",
+    color: "#ffffff",
   },
   btnSuccess: {
-    backgroundColor: "#ffe974",
-    color: "#000000",
-    border: "2px solid #d53d22",
+    backgroundColor: "#4caf50",
+    color: "#ffffff",
   },
   btnDanger: {
-    backgroundColor: "#d53d22",
+    backgroundColor: "#ef5350",
     color: "#ffffff",
   },
   btnSm: {
@@ -813,9 +810,9 @@ const styles = {
   },
   btnControl: {
     padding: "8px 16px",
-    backgroundColor: "#ffffff",
-    color: "#000000",
-    border: "2px solid #d53d22",
+    backgroundColor: "#37474f",
+    color: "#e0e6ed",
+    border: "1px solid #455a64",
     borderRadius: "4px",
     cursor: "pointer",
     fontSize: "16px",
@@ -828,23 +825,22 @@ const styles = {
     gap: "20px",
   },
   section: {
-    backgroundColor: "#ffffff",
+    backgroundColor: "#1a2332",
     padding: "20px",
     borderRadius: "8px",
-    boxShadow: "0 2px 8px rgba(213, 61, 34, 0.1)",
-    border: "2px solid #d53d22",
+    boxShadow: "0 4px 8px rgba(0,0,0,0.3)",
+    border: "1px solid #2d3548",
   },
   sectionTitle: {
     margin: "0 0 15px 0",
     fontSize: "20px",
-    color: "#000000",
-    borderBottom: "3px solid #ffe974",
+    color: "#64b5f6",
+    borderBottom: "2px solid #2196f3",
     paddingBottom: "10px",
-    fontWeight: "700",
   },
   sectionNote: {
     fontSize: "14px",
-    color: "#666666",
+    color: "#90a4ae",
     marginBottom: "10px",
   },
   formGrid: {
@@ -859,32 +855,31 @@ const styles = {
   label: {
     fontWeight: "bold",
     marginBottom: "5px",
-    color: "#000000",
+    color: "#b0bec5",
   },
   input: {
     padding: "8px",
-    border: "2px solid #d53d22",
+    border: "1px solid #37474f",
     borderRadius: "4px",
     fontSize: "14px",
-    backgroundColor: "#ffffff",
-    color: "#000000",
+    backgroundColor: "#0f1419",
+    color: "#e0e6ed",
   },
   select: {
     padding: "8px",
-    border: "2px solid #d53d22",
+    border: "1px solid #37474f",
     borderRadius: "4px",
     fontSize: "14px",
-    backgroundColor: "#ffffff",
-    color: "#000000",
+    backgroundColor: "#0f1419",
+    color: "#e0e6ed",
   },
   perksDisplay: {
     marginTop: "15px",
     padding: "10px",
-    backgroundColor: "#ffe974",
+    backgroundColor: "#1e3a5f",
     borderRadius: "4px",
-    color: "#000000",
-    border: "2px solid #d53d22",
-    fontWeight: "600",
+    color: "#90caf9",
+    border: "1px solid #2d5a8c",
   },
   statsGrid: {
     display: "grid",
@@ -895,9 +890,9 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     padding: "10px",
-    backgroundColor: "#ffe974",
+    backgroundColor: "#0f1922",
     borderRadius: "4px",
-    border: "2px solid #d53d22",
+    border: "1px solid #2d3548",
   },
   statControls: {
     display: "flex",
@@ -910,41 +905,37 @@ const styles = {
     width: "60px",
     padding: "8px",
     textAlign: "center",
-    border: "2px solid #d53d22",
+    border: "1px solid #37474f",
     borderRadius: "4px",
     fontSize: "16px",
-    backgroundColor: "#ffffff",
-    color: "#000000",
-    fontWeight: "600",
+    backgroundColor: "#0f1419",
+    color: "#e0e6ed",
   },
   modifier: {
     fontSize: "12px",
-    color: "#d53d22",
-    fontWeight: "bold",
+    color: "#66bb6a",
+    fontWeight: "normal",
   },
   costLabel: {
     fontSize: "11px",
-    color: "#666666",
+    color: "#78909c",
     marginTop: "5px",
   },
   pointsRemaining: {
-    color: "#d53d22",
+    color: "#66bb6a",
     fontSize: "16px",
-    fontWeight: "700",
   },
   pointsNegative: {
-    color: "#d53d22",
+    color: "#ef5350",
     fontSize: "16px",
-    fontWeight: "700",
   },
   warning: {
-    backgroundColor: "#ffe974",
-    color: "#d53d22",
+    backgroundColor: "#3d1f1f",
+    color: "#ef9a9a",
     padding: "10px",
     borderRadius: "4px",
     marginBottom: "10px",
-    border: "2px solid #d53d22",
-    fontWeight: "600",
+    border: "1px solid #5d2f2f",
   },
   derivedStats: {
     display: "flex",
@@ -957,18 +948,18 @@ const styles = {
     alignItems: "center",
     gap: "10px",
     padding: "15px",
-    backgroundColor: "#ffe974",
+    backgroundColor: "#1e3a5f",
     borderRadius: "4px",
     minWidth: "150px",
-    border: "2px solid #d53d22",
+    border: "1px solid #2d5a8c",
   },
   derivedLabel: {
     fontWeight: "bold",
-    color: "#000000",
+    color: "#b0bec5",
   },
   derivedValue: {
     fontSize: "24px",
-    color: "#d53d22",
+    color: "#64b5f6",
     fontWeight: "bold",
   },
   skillsGrid: {
@@ -978,9 +969,9 @@ const styles = {
   },
   skillItem: {
     padding: "10px",
-    backgroundColor: "#ffe974",
+    backgroundColor: "#0f1922",
     borderRadius: "4px",
-    border: "2px solid #d53d22",
+    border: "1px solid #2d3548",
   },
   skillHeader: {
     display: "flex",
@@ -993,8 +984,7 @@ const styles = {
     alignItems: "center",
     gap: "5px",
     fontSize: "12px",
-    color: "#000000",
-    fontWeight: "600",
+    color: "#90a4ae",
   },
   skillControls: {
     display: "flex",
@@ -1007,7 +997,7 @@ const styles = {
     fontWeight: "bold",
     minWidth: "30px",
     textAlign: "center",
-    color: "#000000",
+    color: "#e0e6ed",
   },
   trackersGrid: {
     display: "grid",
@@ -1022,22 +1012,21 @@ const styles = {
     display: "flex",
     alignItems: "center",
     gap: "5px",
-    color: "#000000",
-    fontWeight: "600",
+    color: "#e0e6ed",
   },
   inputSmall: {
     padding: "8px",
-    border: "2px solid #d53d22",
+    border: "1px solid #37474f",
     borderRadius: "4px",
     fontSize: "14px",
     flex: 1,
-    backgroundColor: "#ffffff",
-    color: "#000000",
+    backgroundColor: "#0f1419",
+    color: "#e0e6ed",
     width: "100%",
   },
   helperText: {
     fontSize: "11px",
-    color: "#666666",
+    color: "#78909c",
     marginTop: "3px",
   },
   textSections: {
@@ -1051,13 +1040,13 @@ const styles = {
   },
   textarea: {
     padding: "8px",
-    border: "2px solid #d53d22",
+    border: "1px solid #37474f",
     borderRadius: "4px",
     fontSize: "14px",
     fontFamily: "Arial, sans-serif",
     resize: "vertical",
-    backgroundColor: "#ffffff",
-    color: "#000000",
+    backgroundColor: "#0f1419",
+    color: "#e0e6ed",
     width: "90%",
   },
   savedCharacters: {
@@ -1070,9 +1059,9 @@ const styles = {
     justifyContent: "space-between",
     alignItems: "center",
     padding: "15px",
-    backgroundColor: "#ffe974",
+    backgroundColor: "#0f1922",
     borderRadius: "4px",
-    border: "2px solid #d53d22",
+    border: "1px solid #2d3548",
   },
   savedCharacterInfo: {
     flex: 1,
@@ -1080,18 +1069,16 @@ const styles = {
   savedCharacterName: {
     margin: "0 0 5px 0",
     fontSize: "18px",
-    color: "#000000",
-    fontWeight: "700",
+    color: "#64b5f6",
   },
   savedCharacterDetails: {
     margin: "5px 0",
     fontSize: "14px",
-    color: "#000000",
-    fontWeight: "600",
+    color: "#90a4ae",
   },
   savedCharacterDate: {
     fontSize: "12px",
-    color: "#666666",
+    color: "#78909c",
   },
   savedCharacterActions: {
     display: "flex",

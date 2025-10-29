@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 
 const compendiumData = [
   {
@@ -23,7 +24,7 @@ const compendiumData = [
       </ul>
       
       <div class="media-container">
-        <img src="https://via.placeholder.com/800x400/16213e/f0a500?text=Combat+Example+Diagram" alt="Combat Example" />
+        <img src="https://via.placeholder.com/800x400/1a2332/64b5f6?text=Combat+Example+Diagram" alt="Combat Example" />
       </div>
     `,
   },
@@ -101,7 +102,7 @@ const compendiumData = [
       </ul>
       
       <div class="media-container">
-        <img src="https://via.placeholder.com/600x400/16213e/f0a500?text=Elven+Warrior" alt="Elven Warrior" />
+        <img src="https://via.placeholder.com/600x400/1a2332/64b5f6?text=Elven+Warrior" alt="Elven Warrior" />
       </div>
       
       <h3>Cultural Background</h3>
@@ -159,7 +160,7 @@ const compendiumData = [
       </ul>
       
       <div class="media-container">
-        <img src="https://via.placeholder.com/800x500/16213e/f0a500?text=Map+of+Aethermoor" alt="Map of Aethermoor" />
+        <img src="https://via.placeholder.com/800x500/1a2332/64b5f6?text=Map+of+Aethermoor" alt="Map of Aethermoor" />
       </div>
       
       <h3>The Great Convergence</h3>
@@ -171,20 +172,21 @@ const compendiumData = [
 ];
 
 const categories = [
-  { id: "all", label: "All Entries" },
-  { id: "rules", label: "Core Rules" },
-  { id: "combat", label: "Combat" },
-  { id: "spells", label: "Spells & Magic" },
-  { id: "abilities", label: "Abilities" },
-  { id: "equipment", label: "Equipment & Gear" },
-  { id: "species", label: "Species & Races" },
-  { id: "backgrounds", label: "Backgrounds" },
-  { id: "world", label: "World & Lore" },
+  { id: "all", label: "All Entries", icon: "📚" },
+  { id: "rules", label: "Core Rules", icon: "📖" },
+  { id: "combat", label: "Combat", icon: "⚔️" },
+  { id: "spells", label: "Spells & Magic", icon: "✨" },
+  { id: "abilities", label: "Abilities", icon: "💪" },
+  { id: "equipment", label: "Equipment & Gear", icon: "🛡️" },
+  { id: "species", label: "Species & Races", icon: "👥" },
+  { id: "backgrounds", label: "Backgrounds", icon: "📜" },
+  { id: "world", label: "World & Lore", icon: "🌍" },
 ];
 
 export default function WillWhispersCompendium() {
   const [currentCategory, setCurrentCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const filteredEntries = useMemo(() => {
     return compendiumData.filter((entry) => {
@@ -202,111 +204,197 @@ export default function WillWhispersCompendium() {
     });
   }, [currentCategory, searchTerm]);
 
+  const currentCategoryInfo = categories.find(
+    (cat) => cat.id === currentCategory
+  );
+
   return (
     <>
       <style>{`
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-
-        body {
-          font-family: "Georgia", serif;
-          background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-          color: #e8e8e8;
-          line-height: 1.6;
-        }
 
         .header {
-          background: rgba(0, 0, 0, 0.3);
-          padding: 30px 20px;
-          text-align: center;
-          border-bottom: 3px solid #f0a500;
+          background: #1e2738;
+          padding: 24px 20px;
+          border-bottom: 2px solid #2196f3;
           position: sticky;
           top: 0;
           z-index: 100;
-          backdrop-filter: blur(10px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .header-container {
+          max-width: 1400px;
+          margin: 0 auto;
+        }
+
+        .header-top {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+        }
+
+        .header-branding {
+          display: flex;
+          align-items: center;
+          gap: 15px;
         }
 
         h1 {
-          color: #f0a500;
-          font-size: 2.5em;
-          margin-bottom: 0px;
-          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+          color: #64b5f6;
+          font-size: 2em;
+          font-weight: 700;
+          margin: 0;
         }
 
         .header-subtitle {
-          color: #aaa;
-          margin-bottom: 5px;
+          color: #90a4ae;
+          font-size: 0.9em;
+          margin-top: 2px;
         }
 
         .header-link {
-          color: #60a5fa;
+          color: #64b5f6;
           text-decoration: none;
-          display: inline-block;
-          margin-bottom: 10px;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 20px;
+          background: #0f1922;
+          border: 1px solid #2d3548;
+          border-radius: 6px;
           font-size: 0.9em;
+          transition: all 0.3s;
         }
 
         .header-link:hover {
-          color: #93c5fd;
-          text-decoration: underline;
+          background: #1a2332;
+          border-color: #2196f3;
+          transform: translateY(-2px);
         }
 
         .search-bar {
           max-width: 600px;
-          margin: 20px auto 0;
+          width: 100%;
+          margin: 0 auto;
           position: relative;
         }
 
         .search-bar input {
-          width: 100%;
-          padding: 15px 50px 15px 20px;
-          font-size: 0.9em;
-          border: 2px solid #f0a500;
-          border-radius: 30px;
-          background: rgba(255, 255, 255, 0.1);
-          color: #e8e8e8;
+          width: 80%;
+          padding: 14px 50px 14px 20px;
+          font-size: 0.95em;
+          border: 1px solid #37474f;
+          border-radius: 8px;
+          background: #0f1419;
+          color: #e0e6ed;
           outline: none;
+          transition: all 0.3s;
+        }
+
+        .search-bar input:focus {
+          border-color: #2196f3;
+          box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
         }
 
         .search-bar input::placeholder {
-          color: #aaa;
+          color: #78909c;
         }
 
         .search-icon {
           position: absolute;
-          right: 20px;
+          right: 18px;
           top: 50%;
           transform: translateY(-50%);
-          color: #f0a500;
-          font-size: 1.3em;
+          color: #64b5f6;
+          font-size: 1.2em;
+          pointer-events: none;
         }
 
-        .container {
+        .mobile-menu-btn {
+          display: none;
+          background: #0f1922;
+          border: 1px solid #2d3548;
+          color: #64b5f6;
+          padding: 10px 16px;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 1.2em;
+          transition: all 0.3s;
+        }
+
+        .mobile-menu-btn:hover {
+          background: #1a2332;
+          border-color: #2196f3;
+        }
+
+        .sidebar-overlay {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.7);
+          z-index: 998;
+          animation: fadeIn 0.3s;
+        }
+
+        .sidebar-overlay.open {
+          display: block;
+        }
+
+        .com-container {
           display: flex;
           max-width: 1400px;
           margin: 0 auto;
-          min-height: calc(100vh - 200px);
+          min-height: calc(100vh - 180px);
+          gap: 20px;
+          padding: 20px;
+          width: 90vw;
         }
 
         .sidebar {
           width: 280px;
-          background: rgba(0, 0, 0, 0.3);
+          background: #1a2332;
           padding: 20px;
-          border-right: 1px solid rgba(240, 165, 0, 0.2);
+          border-radius: 12px;
+          border: 1px solid #2d3548;
           position: sticky;
-          top: 230px;
+          top: 200px;
           height: fit-content;
-          max-height: calc(100vh - 200px);
+          max-height: calc(100vh - 220px);
           overflow-y: auto;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+          transition: all 0.3s;
+        }
+
+        .sidebar::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+          background: #0f1419;
+          border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+          background: #37474f;
+          border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+          background: #455a64;
         }
 
         .sidebar h3 {
-          color: #f0a500;
-          margin-bottom: 15px;
-          font-size: 1.3em;
+          color: #64b5f6;
+          margin-bottom: 16px;
+          font-size: 1.2em;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 8px;
         }
 
         .category-list {
@@ -314,46 +402,92 @@ export default function WillWhispersCompendium() {
         }
 
         .category-list li {
-          padding: 10px;
-          margin-bottom: 5px;
+          padding: 12px 14px;
+          margin-bottom: 6px;
           cursor: pointer;
-          border-radius: 5px;
-          transition: all 0.3s;
+          border-radius: 8px;
+          transition: all 0.2s;
           border-left: 3px solid transparent;
-          font-size: 0.9em;
+          font-size: 0.95em;
+          color: #b0bec5;
+          display: flex;
+          align-items: center;
+          gap: 10px;
         }
 
         .category-list li:hover {
-          background: rgba(240, 165, 0, 0.1);
-          border-left-color: #f0a500;
-          padding-left: 15px;
+          background: #0f1922;
+          border-left-color: #2196f3;
+          color: #e0e6ed;
+          transform: translateX(4px);
         }
 
         .category-list li.active {
-          background: rgba(240, 165, 0, 0.2);
-          border-left-color: #f0a500;
-          font-weight: bold;
+          background: #1e3a5f;
+          border-left-color: #2196f3;
+          color: #64b5f6;
+          font-weight: 600;
+        }
+
+        .category-icon {
+          font-size: 1.2em;
         }
 
         .content {
           flex: 1;
-          padding: 30px;
+          min-width: 0;
+        }
+
+        .content-header {
+          background: #1a2332;
+          padding: 20px 24px;
+          border-radius: 12px;
+          border: 1px solid #2d3548;
+          margin-bottom: 20px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .content-header h2 {
+          color: #64b5f6;
+          font-size: 1.5em;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin: 0;
+        }
+
+        .results-count {
+          color: #90a4ae;
+          font-size: 0.9em;
+          background: #0f1922;
+          padding: 6px 14px;
+          border-radius: 20px;
         }
 
         .entry {
-          background: rgba(255, 255, 255, 0.05);
-          backdrop-filter: blur(10px);
-          padding: 30px;
-          margin-bottom: 30px;
-          border-radius: 10px;
-          border: 1px solid rgba(240, 165, 0, 0.2);
-          animation: fadeIn 0.5s;
+          background: #1a2332;
+          padding: 28px;
+          margin-bottom: 20px;
+          border-radius: 12px;
+          border: 1px solid #2d3548;
+          animation: fadeIn 0.4s ease-out;
+          transition: all 0.3s;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .entry:hover {
+          border-color: #2196f3;
+          box-shadow: 0 4px 16px rgba(33, 150, 243, 0.15);
+          transform: translateY(-2px);
         }
 
         @keyframes fadeIn {
           from {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(15px);
           }
           to {
             opacity: 1;
@@ -362,50 +496,82 @@ export default function WillWhispersCompendium() {
         }
 
         .entry h2 {
-          color: #f0a500;
-          font-size: 2em;
-          margin-bottom: 10px;
-          border-bottom: 2px solid #f0a500;
-          padding-bottom: 10px;
+          color: #64b5f6;
+          font-size: 1.8em;
+          margin-bottom: 14px;
+          font-weight: 600;
+          padding-bottom: 12px;
+          border-bottom: 2px solid #2d5a8c;
         }
 
         .entry-tags {
           display: flex;
-          gap: 10px;
+          gap: 8px;
           margin-bottom: 20px;
           flex-wrap: wrap;
         }
 
         .tag {
-          background: rgba(240, 165, 0, 0.2);
-          color: #f0a500;
-          padding: 5px 15px;
-          border-radius: 20px;
-          font-size: 0.9em;
-          border: 1px solid rgba(240, 165, 0, 0.3);
+          background: #1e3a5f;
+          color: #90caf9;
+          padding: 6px 14px;
+          border-radius: 6px;
+          font-size: 0.85em;
+          border: 1px solid #2d5a8c;
+          font-weight: 500;
+          transition: all 0.2s;
+        }
+
+        .tag:hover {
+          background: #2d5a8c;
+          color: #e3f2fd;
+        }
+
+        .entry-content {
+          color: #b0bec5;
+        }
+
+        .entry-content p {
+          margin-bottom: 16px;
+          line-height: 1.8;
+          text-align: left;
         }
 
         .entry-content h3 {
-          color: #f0a500;
-          margin-top: 20px;
-          margin-bottom: 10px;
+          color: #64b5f6;
+          margin-top: 24px;
+          margin-bottom: 12px;
+          font-size: 1.3em;
+          font-weight: 600;
         }
 
         .entry-content ul,
         .entry-content ol {
-          margin-left: 30px;
-          margin-bottom: 15px;
+          margin-left: 24px;
+          margin-bottom: 16px;
+          text-align: left;
         }
 
         .entry-content li {
-          margin-bottom: 8px;
+          margin-bottom: 10px;
+          line-height: 1.7;
+        }
+
+        .entry-content strong {
+          color: #90caf9;
+          font-weight: 600;
         }
 
         .tooltip-word {
-          color: #f0a500;
+          color: #64b5f6;
           cursor: help;
-          border-bottom: 1px dotted #f0a500;
+          border-bottom: 2px dotted #2196f3;
           position: relative;
+          transition: all 0.2s;
+        }
+
+        .tooltip-word:hover {
+          color: #90caf9;
         }
 
         .tooltip-word:hover::after {
@@ -414,122 +580,218 @@ export default function WillWhispersCompendium() {
           bottom: 100%;
           left: 50%;
           transform: translateX(-50%);
-          background: rgba(0, 0, 0, 0.95);
-          color: #e8e8e8;
-          padding: 10px 15px;
-          border-radius: 5px;
-          border: 1px solid #f0a500;
+          background: #0f1419;
+          color: #e0e6ed;
+          padding: 10px 16px;
+          border-radius: 8px;
+          border: 1px solid #2196f3;
           white-space: nowrap;
           z-index: 1000;
-          font-size: 0.9em;
-          margin-bottom: 5px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+          font-size: 0.85em;
+          margin-bottom: 8px;
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+          animation: tooltipFade 0.2s;
+        }
+
+        @keyframes tooltipFade {
+          from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(5px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+          }
         }
 
         .media-container {
-          margin: 20px 0;
-          border-radius: 10px;
+          margin: 24px 0;
+          border-radius: 12px;
           overflow: hidden;
+          border: 1px solid #2d3548;
         }
 
         .media-container img {
           max-width: 100%;
           display: block;
-          border-radius: 10px;
-        }
-
-        .media-container iframe {
-          width: 100%;
-          height: 400px;
-          border: none;
-          border-radius: 10px;
+          border-radius: 12px;
         }
 
         .external-link {
-          color: #f0a500;
+          color: #64b5f6;
           text-decoration: none;
-          border-bottom: 1px solid #f0a500;
-          transition: all 0.3s;
+          border-bottom: 1px solid #2196f3;
+          transition: all 0.2s;
+          font-weight: 500;
         }
 
         .external-link:hover {
-          color: #ffb800;
-          border-bottom-color: #ffb800;
+          color: #90caf9;
+          border-bottom-color: #64b5f6;
         }
 
         .no-results {
           text-align: center;
-          padding: 60px 20px;
-          color: #aaa;
-          font-size: 1.2em;
+          padding: 80px 20px;
+          color: #78909c;
+          font-size: 1.1em;
+          background: #1a2332;
+          border-radius: 12px;
+          border: 1px solid #2d3548;
+        }
+
+        .no-results-icon {
+          font-size: 4em;
+          margin-bottom: 20px;
+          opacity: 0.5;
         }
 
         @media (max-width: 968px) {
-          .container {
+          .com-container  {
             flex-direction: column;
+            padding: 15px;
           }
 
           .sidebar {
-            width: 100%;
-            position: static;
-            max-height: none;
-            border-right: none;
-            border-bottom: 1px solid rgba(240, 165, 0, 0.2);
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 280px;
+            max-width: 85vw;
+            height: 100vh;
+            max-height: 100vh;
+            border-radius: 0;
+            z-index: 999;
+            transition: left 0.3s ease-in-out;
+            border-right: 2px solid #2196f3;
+          }
+
+          .sidebar.open {
+            left: 0;
+          }
+
+          .mobile-menu-btn {
+            display: block;
+          }
+
+          .content-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
           }
         }
 
         @media (max-width: 768px) {
-          h1 {
-            font-size: 2em;
+
+         .com-container  {
+               width: 90%;
           }
 
-          .content {
-            padding: 15px;
+          h1 {
+            font-size: 1.5em;
+          }
+
+          .header-top {
+            flex-direction: column;
+            gap: 12px;
+            align-items: flex-start;
           }
 
           .entry {
             padding: 20px;
           }
+
+          .entry h2 {
+            font-size: 1.5em;
+          }
         }
       `}</style>
 
       <div className="header">
-        <a href="index.html" className="header-link">
-          Character Builder
-        </a>
-        <h1>Will & Whispers</h1>
-        <p className="header-subtitle">Game Compendium</p>
-        <div className="search-bar">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search the compendium..."
-          />
-          <span className="search-icon">🔍</span>
+        <div className="header-container">
+          <div className="header-top">
+            <div className="header-branding">
+              <div>
+                <h1>Will & Whispers</h1>
+                <p className="header-subtitle">Game Compendium</p>
+              </div>
+            </div>
+            <Link to="/builder" className="header-link">
+              <span>⚡</span>
+              Character Builder
+            </Link>
+            <button
+              className="mobile-menu-btn"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
+              {sidebarOpen ? "✕" : "☰"}
+            </button>
+          </div>
+          <div className="search-bar">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search entries, tags, or content..."
+            />
+            <span className="search-icon">🔍</span>
+          </div>
         </div>
       </div>
 
-      <div className="container">
-        <aside className="sidebar">
-          <h3>Categories</h3>
+      <div
+        className={`sidebar-overlay ${sidebarOpen ? "open" : ""}`}
+        onClick={() => setSidebarOpen(false)}
+      />
+
+      <div className="com-container ">
+        <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
+          <h3>
+            <span>📂</span>
+            Categories
+          </h3>
           <ul className="category-list">
             {categories.map((cat) => (
               <li
                 key={cat.id}
                 className={currentCategory === cat.id ? "active" : ""}
-                onClick={() => setCurrentCategory(cat.id)}
+                onClick={() => {
+                  setCurrentCategory(cat.id);
+                  setSidebarOpen(false);
+                }}
               >
-                {cat.label}
+                <span className="category-icon">{cat.icon}</span>
+                <span>{cat.label}</span>
               </li>
             ))}
           </ul>
         </aside>
 
         <main className="content">
+          <div className="content-header">
+            <h2>
+              <span>{currentCategoryInfo?.icon}</span>
+              {currentCategoryInfo?.label}
+            </h2>
+            <span className="results-count">
+              {filteredEntries.length}{" "}
+              {filteredEntries.length === 1 ? "entry" : "entries"}
+            </span>
+          </div>
+
           {filteredEntries.length === 0 ? (
             <div className="no-results">
-              No entries found. Try adjusting your search or category filter.
+              <div className="no-results-icon">📭</div>
+              <p>No entries found matching your criteria.</p>
+              <p
+                style={{
+                  fontSize: "0.9em",
+                  marginTop: "10px",
+                  color: "#546e7a",
+                }}
+              >
+                Try adjusting your search or selecting a different category.
+              </p>
             </div>
           ) : (
             filteredEntries.map((entry) => (
