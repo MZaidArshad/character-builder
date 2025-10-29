@@ -722,7 +722,7 @@ export default function WillWhispersCompendium() {
                 <p className="header-subtitle">Game Compendium</p>
               </div>
             </div>
-            <Link to="/" className="header-link">
+            <Link to="/builder" className="header-link">
               <span>⚡</span>
               Character Builder
             </Link>

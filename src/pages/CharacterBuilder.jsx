@@ -332,7 +332,7 @@ const CharacterBuilder = () => {
 
   return (
     <>
-      <Link to="/compendium">Compendium page</Link>
+      <Link to="/">Compendium page</Link>
       <div style={styles.container}>
         <header style={styles.header}>
           <h1 style={styles.title}>Will & Whispers Character Builder</h1>

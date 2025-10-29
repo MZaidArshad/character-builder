@@ -9,8 +9,8 @@ import WillWhispersCompendium from "./pages/Compendium";
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<CharacterBuilder />} />
-      <Route path="/compendium" element={<WillWhispersCompendium />} />
+      <Route path="/" element={<WillWhispersCompendium />} />
+      <Route path="/builder" element={<CharacterBuilder />} />
     </Routes>
   );
 }
