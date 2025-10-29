@@ -220,7 +220,13 @@ const CharacterBuilder = () => {
 
   // Calculate skill points spent
   const calculateSkillPointsSpent = () => {
-    return Object.values(character.skills).reduce((sum, val) => sum + val, 0);
+    let spent = 0;
+    Object.values(character.skills).forEach((value) => {
+      for (let i = 1; i <= value; i++) {
+        spent += i;
+      }
+    });
+    return spent;
   };
 
   // Get cost for next stat increase
