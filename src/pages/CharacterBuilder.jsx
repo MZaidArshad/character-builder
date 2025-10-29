@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
-import "./characterBuilder.css";
-import jsPDF from "jspdf";
+import React, { useState, useEffect, useRef } from "react";
 import PDFExporter from "./PDFExporter";
-
+import { Link } from "react-router-dom";
+// import "./characterBuilder.css";
 const CharacterBuilder = () => {
   const initialCharacter = {
     name: "",
@@ -39,6 +38,7 @@ const CharacterBuilder = () => {
       tempo: 0,
       presence: 0,
       fameInfamy: 0,
+      currentHealth: 0,
     },
     textSections: {
       perks: "",
@@ -52,7 +52,7 @@ const CharacterBuilder = () => {
       notes: "",
     },
   };
-
+  const pdfExporterRef = useRef();
   const [character, setCharacter] = useState(initialCharacter);
   const [savedCharacters, setSavedCharacters] = useState([]);
 
@@ -62,27 +62,51 @@ const CharacterBuilder = () => {
 
   // Species and Background data
   const speciesData = {
-    "": { statMods: {}, speed: 0, perks: [] },
-    Human: { statMods: { willpower: 1 }, speed: 30, perks: ["Adaptable"] },
+    "": { statMods: {}, speed: 0, perks: [], staminaBonus: 0 },
+    Human: {
+      statMods: { willpower: 1 },
+      speed: 30,
+      perks: ["Adaptable"],
+      staminaBonus: 2,
+    },
     Elf: {
       statMods: { dexterity: 1, mind: 1 },
       speed: 35,
       perks: ["Keen Senses"],
+      staminaBonus: 0,
     },
     Dwarf: {
       statMods: { strength: 1, endurance: 1 },
       speed: 25,
       perks: ["Sturdy"],
+      staminaBonus: 5,
     },
-    Halfling: { statMods: { dexterity: 2 }, speed: 25, perks: ["Lucky"] },
+    Halfling: {
+      statMods: { dexterity: 2 },
+      speed: 25,
+      perks: ["Lucky"],
+      staminaBonus: 0,
+    },
   };
 
   const backgroundData = {
-    "": { statMods: {}, perks: [] },
-    Soldier: { statMods: { strength: 1 }, perks: ["Combat Training"] },
-    Scholar: { statMods: { mind: 2 }, perks: ["Well Read"] },
-    Rogue: { statMods: { dexterity: 1 }, perks: ["Street Smart"] },
-    Noble: { statMods: { willpower: 1 }, perks: ["High Society"] },
+    "": { statMods: {}, perks: [], staminaBonus: 0 },
+    Soldier: {
+      statMods: { strength: 1 },
+      perks: ["Combat Training"],
+      staminaBonus: 3,
+    },
+    Scholar: { statMods: { mind: 2 }, perks: ["Well Read"], staminaBonus: 0 },
+    Rogue: {
+      statMods: { dexterity: 1 },
+      perks: ["Street Smart"],
+      staminaBonus: 1,
+    },
+    Noble: {
+      statMods: { willpower: 1 },
+      perks: ["High Society"],
+      staminaBonus: 2,
+    },
   };
 
   const skillsList = [
@@ -108,25 +132,85 @@ const CharacterBuilder = () => {
     }
   }, []);
 
+  // Apply species and background modifiers
+  useEffect(() => {
+    if (character.species || character.background) {
+      setCharacter((prev) => {
+        const newStats = { ...prev.stats };
+
+        // Reset to base stats first (subtract old modifiers if any)
+        // This is handled by the user manually if they change species/background
+
+        return prev;
+      });
+    }
+  }, [character.species, character.background]);
+
+  // Auto-calculate wounded stage based on health loss
+  useEffect(() => {
+    const maxStamina = calculateStamina();
+    const currentHealth = character.trackers.currentHealth;
+
+    if (maxStamina > 0 && currentHealth >= 0) {
+      const healthPercentage = (currentHealth / maxStamina) * 100;
+      let newWoundedStage = 0;
+
+      if (healthPercentage <= 75) newWoundedStage = 1;
+      if (healthPercentage <= 50) newWoundedStage = 2;
+      if (healthPercentage <= 25) newWoundedStage = 3;
+      if (healthPercentage <= 0) newWoundedStage = 4;
+
+      if (newWoundedStage !== character.trackers.woundedStage) {
+        setCharacter((prev) => ({
+          ...prev,
+          trackers: {
+            ...prev.trackers,
+            woundedStage: newWoundedStage,
+          },
+        }));
+      }
+    }
+  }, [character.trackers.currentHealth]);
+
+  // Calculate base stats with modifiers
+  const getStatWithModifiers = (statName) => {
+    const baseStat = character.stats[statName];
+    const speciesMod = speciesData[character.species]?.statMods[statName] || 0;
+    const backgroundMod =
+      backgroundData[character.background]?.statMods[statName] || 0;
+    return baseStat + speciesMod + backgroundMod;
+  };
+
   // Calculate derived stats
   const calculateStamina = () => {
-    const base = (character.stats.strength + character.stats.endurance) * 2;
-    return base;
+    const baseStr = getStatWithModifiers("strength");
+    const baseEnd = getStatWithModifiers("endurance");
+    const base = (baseStr + baseEnd) * 2;
+    const speciesBonus = speciesData[character.species]?.staminaBonus || 0;
+    const backgroundBonus =
+      backgroundData[character.background]?.staminaBonus || 0;
+    return base + speciesBonus + backgroundBonus;
   };
 
   const calculateInitiative = () => {
-    return Math.ceil(character.stats.dexterity / 2);
+    return Math.ceil(getStatWithModifiers("dexterity") / 2);
   };
 
   const calculateSpeed = () => {
     return speciesData[character.species]?.speed || 30;
   };
 
-  // Calculate stat points spent
+  const calculateEffectiveMaxAP = () => {
+    return Math.max(
+      0,
+      character.trackers.maxAP - character.trackers.woundedStage
+    );
+  };
+
+  // Calculate stat points spent (base stats only, not including modifiers)
   const calculateStatPointsSpent = () => {
     let spent = 0;
     Object.entries(character.stats).forEach(([stat, value]) => {
-      // Calculate cost to reach this value from 1
       for (let i = 1; i < value; i++) {
         spent += i;
       }
@@ -137,6 +221,11 @@ const CharacterBuilder = () => {
   // Calculate skill points spent
   const calculateSkillPointsSpent = () => {
     return Object.values(character.skills).reduce((sum, val) => sum + val, 0);
+  };
+
+  // Get cost for next stat increase
+  const getNextStatCost = (stat) => {
+    return character.stats[stat];
   };
 
   const handleStatChange = (stat, newValue) => {
@@ -202,12 +291,16 @@ const CharacterBuilder = () => {
   const loadCharacter = (id) => {
     const char = savedCharacters.find((c) => c.id === id);
     if (char) {
+      // Ensure currentHealth exists for older saves
+      if (!char.trackers.currentHealth) {
+        char.trackers.currentHealth = calculateStamina();
+      }
       setCharacter(char);
     }
   };
 
   const deleteCharacter = (id) => {
-    if (confirm("Are you sure you want to delete this character?")) {
+    if (window.confirm("Are you sure you want to delete this character?")) {
       const updated = savedCharacters.filter((c) => c.id !== id);
       setSavedCharacters(updated);
       localStorage.setItem("willWhispersCharacters", JSON.stringify(updated));
@@ -215,152 +308,63 @@ const CharacterBuilder = () => {
   };
 
   const newCharacter = () => {
-    if (confirm("Start a new character? Any unsaved changes will be lost.")) {
+    if (
+      window.confirm("Start a new character? Any unsaved changes will be lost.")
+    ) {
       setCharacter(initialCharacter);
     }
   };
 
-  const exportToPDF = () => {
-    const pdf = new jsPDF();
-    const pageWidth = pdf.internal.pageSize.width;
-    let yPos = 20;
-
-    // Title
-    pdf.setFontSize(20);
-    pdf.text("Will & Whispers Character Sheet", pageWidth / 2, yPos, {
-      align: "center",
-    });
-    yPos += 15;
-
-    // Character Info
-    pdf.setFontSize(12);
-    pdf.text(`Name: ${character.name || "Unnamed"}`, 20, yPos);
-    yPos += 7;
-    pdf.text(`Species: ${character.species || "None"}`, 20, yPos);
-    yPos += 7;
-    pdf.text(`Background: ${character.background || "None"}`, 20, yPos);
-    yPos += 10;
-
-    // Stats
-    pdf.setFontSize(14);
-    pdf.text("Stats", 20, yPos);
-    yPos += 7;
-    pdf.setFontSize(10);
-    Object.entries(character.stats).forEach(([stat, value]) => {
-      pdf.text(
-        `${stat.charAt(0).toUpperCase() + stat.slice(1)}: ${value}`,
-        20,
-        yPos
-      );
-      yPos += 5;
-    });
-    yPos += 5;
-
-    // Derived Stats
-    pdf.setFontSize(12);
-    pdf.text(`Stamina: ${calculateStamina()}`, 20, yPos);
-    yPos += 6;
-    pdf.text(`Initiative: ${calculateInitiative()}`, 20, yPos);
-    yPos += 6;
-    pdf.text(`Speed: ${calculateSpeed()}`, 20, yPos);
-    yPos += 10;
-
-    // Skills
-    pdf.setFontSize(14);
-    pdf.text("Skills", 20, yPos);
-    yPos += 7;
-    pdf.setFontSize(10);
-    Object.entries(character.skills).forEach(([skill, value]) => {
-      const spec = character.specializations.includes(skill)
-        ? " (Specialized)"
-        : "";
-      pdf.text(
-        `${skill.charAt(0).toUpperCase() + skill.slice(1)}: ${value}${spec}`,
-        20,
-        yPos
-      );
-      yPos += 5;
-    });
-
-    // Add new page for trackers and text sections
-    pdf.addPage();
-    yPos = 20;
-
-    // Trackers
-    pdf.setFontSize(14);
-    pdf.text("Trackers", 20, yPos);
-    yPos += 7;
-    pdf.setFontSize(10);
-    pdf.text(
-      `Action Points: ${character.trackers.currentAP}/${character.trackers.maxAP}`,
-      20,
-      yPos
-    );
-    yPos += 6;
-    pdf.text(`Wounded Stage: ${character.trackers.woundedStage}`, 20, yPos);
-    yPos += 6;
-    pdf.text(`Armor: ${character.trackers.armor}`, 20, yPos);
-    yPos += 6;
-    pdf.text(`Tempo: ${character.trackers.tempo}`, 20, yPos);
-    yPos += 6;
-    pdf.text(`Presence: ${character.trackers.presence}`, 20, yPos);
-    yPos += 6;
-    pdf.text(`Fame/Infamy: ${character.trackers.fameInfamy}`, 20, yPos);
-    yPos += 10;
-
-    // Text Sections
-    const addTextSection = (title, content) => {
-      if (yPos > 250) {
-        pdf.addPage();
-        yPos = 20;
-      }
-      pdf.setFontSize(12);
-      pdf.text(title, 20, yPos);
-      yPos += 6;
-      pdf.setFontSize(9);
-      const lines = pdf.splitTextToSize(content || "None", pageWidth - 40);
-      pdf.text(lines, 20, yPos);
-      yPos += lines.length * 4 + 5;
-    };
-
-    Object.entries(character.textSections).forEach(([section, content]) => {
-      addTextSection(
-        section.charAt(0).toUpperCase() + section.slice(1),
-        content
-      );
-    });
-
-    pdf.save(`${character.name || "character"}-sheet.pdf`);
+  const handleExportPDF = () => {
+    if (pdfExporterRef.current) {
+      pdfExporterRef.current.exportPDF();
+    }
   };
-
   const statPointsRemaining = STAT_POINTS - calculateStatPointsSpent();
   const skillPointsRemaining = SKILL_POINTS - calculateSkillPointsSpent();
 
+  // Get all perks from species and background
+  const getAllPerks = () => {
+    const speciesPerks = speciesData[character.species]?.perks || [];
+    const backgroundPerks = backgroundData[character.background]?.perks || [];
+    return [...speciesPerks, ...backgroundPerks];
+  };
+
   return (
     <>
-      <div className="character-builder">
-        <header className="header">
-          <h1>Will & Whispers Character Builder</h1>
-          <div className="header-buttons">
-            <button onClick={newCharacter} className="btn btn-secondary">
+      <Link to="/compendium">Compendium page</Link>
+      <div style={styles.container}>
+        <header style={styles.header}>
+          <h1 style={styles.title}>Will & Whispers Character Builder</h1>
+          <div style={styles.headerButtons}>
+            <button
+              onClick={newCharacter}
+              style={{ ...styles.btn, ...styles.btnSecondary }}
+            >
               New Character
             </button>
-            <button onClick={saveCharacter} className="btn btn-primary">
+            <button
+              onClick={saveCharacter}
+              style={{ ...styles.btn, ...styles.btnPrimary }}
+            >
               Save Character
             </button>
-            <button onClick={exportToPDF} className="btn btn-success">
+            <button
+              onClick={handleExportPDF}
+              style={{ ...styles.btn, ...styles.btnSuccess }}
+            >
               Export PDF
             </button>
           </div>
         </header>
 
-        <div className="main-content">
+        <div style={styles.mainContent}>
           {/* Basic Info */}
-          <section className="section">
-            <h2>Basic Information</h2>
-            <div className="form-grid">
-              <div className="form-group">
-                <label>Character Name</label>
+          <section style={styles.section}>
+            <h2 style={styles.sectionTitle}>Basic Information</h2>
+            <div style={styles.formGrid}>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>Character Name</label>
                 <input
                   type="text"
                   value={character.name}
@@ -368,15 +372,17 @@ const CharacterBuilder = () => {
                     setCharacter({ ...character, name: e.target.value })
                   }
                   placeholder="Enter character name"
+                  style={styles.input}
                 />
               </div>
-              <div className="form-group">
-                <label>Species</label>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>Species</label>
                 <select
                   value={character.species}
                   onChange={(e) =>
                     setCharacter({ ...character, species: e.target.value })
                   }
+                  style={styles.select}
                 >
                   <option value="">Select Species</option>
                   <option value="Human">Human</option>
@@ -385,13 +391,14 @@ const CharacterBuilder = () => {
                   <option value="Halfling">Halfling</option>
                 </select>
               </div>
-              <div className="form-group">
-                <label>Background</label>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>Background</label>
                 <select
                   value={character.background}
                   onChange={(e) =>
                     setCharacter({ ...character, background: e.target.value })
                   }
+                  style={styles.select}
                 >
                   <option value="">Select Background</option>
                   <option value="Soldier">Soldier</option>
@@ -401,76 +408,128 @@ const CharacterBuilder = () => {
                 </select>
               </div>
             </div>
+
+            {/* Display Active Perks */}
+            {getAllPerks().length > 0 && (
+              <div style={styles.perksDisplay}>
+                <strong>Active Perks: </strong>
+                {getAllPerks().join(", ")}
+              </div>
+            )}
           </section>
 
           {/* Stats */}
-          <section className="section">
-            <h2>
+          <section style={styles.section}>
+            <h2 style={styles.sectionTitle}>
               Main Stats{" "}
-              <span className="points-remaining">
+              <span
+                style={
+                  statPointsRemaining < 0
+                    ? styles.pointsNegative
+                    : styles.pointsRemaining
+                }
+              >
                 (Points Remaining: {statPointsRemaining})
               </span>
             </h2>
-            <div className="stats-grid">
-              {Object.entries(character.stats).map(([stat, value]) => (
-                <div key={stat} className="stat-item">
-                  <label>{stat.charAt(0).toUpperCase() + stat.slice(1)}</label>
-                  <div className="stat-controls">
-                    <button onClick={() => handleStatChange(stat, value - 1)}>
-                      -
-                    </button>
-                    <input
-                      type="number"
-                      value={value}
-                      onChange={(e) => handleStatChange(stat, e.target.value)}
-                      min="1"
-                      max="10"
-                    />
-                    <button onClick={() => handleStatChange(stat, value + 1)}>
-                      +
-                    </button>
+            {statPointsRemaining < 0 && (
+              <p style={styles.warning}>
+                ⚠️ You've exceeded your stat point budget!
+              </p>
+            )}
+            <div style={styles.statsGrid}>
+              {Object.entries(character.stats).map(([stat, value]) => {
+                const totalValue = getStatWithModifiers(stat);
+                const modifier = totalValue - value;
+                return (
+                  <div key={stat} style={styles.statItem}>
+                    <label style={styles.label}>
+                      {stat.charAt(0).toUpperCase() + stat.slice(1)}
+                      {modifier !== 0 && (
+                        <span style={styles.modifier}>
+                          {" "}
+                          ({value} + {modifier} = {totalValue})
+                        </span>
+                      )}
+                    </label>
+                    <div style={styles.statControls}>
+                      <button
+                        onClick={() => handleStatChange(stat, value - 1)}
+                        style={styles.btnControl}
+                      >
+                        -
+                      </button>
+                      <input
+                        type="number"
+                        value={value}
+                        onChange={(e) => handleStatChange(stat, e.target.value)}
+                        min="1"
+                        max="10"
+                        style={styles.statInput}
+                      />
+                      <button
+                        onClick={() => handleStatChange(stat, value + 1)}
+                        style={styles.btnControl}
+                      >
+                        +
+                      </button>
+                    </div>
+                    <small style={styles.costLabel}>
+                      Next: costs {getNextStatCost(stat)} pts
+                    </small>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
 
           {/* Derived Stats */}
-          <section className="section">
-            <h2>Derived Stats</h2>
-            <div className="derived-stats">
-              <div className="derived-stat">
-                <span className="label">Stamina:</span>
-                <span className="value">{calculateStamina()}</span>
+          <section style={styles.section}>
+            <h2 style={styles.sectionTitle}>Derived Stats</h2>
+            <div style={styles.derivedStats}>
+              <div style={styles.derivedStat}>
+                <span style={styles.derivedLabel}>Stamina:</span>
+                <span style={styles.derivedValue}>{calculateStamina()}</span>
               </div>
-              <div className="derived-stat">
-                <span className="label">Initiative:</span>
-                <span className="value">{calculateInitiative()}</span>
+              <div style={styles.derivedStat}>
+                <span style={styles.derivedLabel}>Initiative:</span>
+                <span style={styles.derivedValue}>{calculateInitiative()}</span>
               </div>
-              <div className="derived-stat">
-                <span className="label">Speed:</span>
-                <span className="value">{calculateSpeed()}</span>
+              <div style={styles.derivedStat}>
+                <span style={styles.derivedLabel}>Speed:</span>
+                <span style={styles.derivedValue}>{calculateSpeed()}</span>
               </div>
             </div>
           </section>
 
           {/* Skills */}
-          <section className="section">
-            <h2>
+          <section style={styles.section}>
+            <h2 style={styles.sectionTitle}>
               Skills{" "}
-              <span className="points-remaining">
+              <span
+                style={
+                  skillPointsRemaining < 0
+                    ? styles.pointsNegative
+                    : styles.pointsRemaining
+                }
+              >
                 (Points Remaining: {skillPointsRemaining})
               </span>
             </h2>
-            <p className="section-note">Select up to 3 specializations</p>
-            <div className="skills-grid">
+            <p style={styles.sectionNote}>Select up to 3 specializations</p>
+            {skillPointsRemaining < 0 && (
+              <p style={styles.warning}>
+                ⚠️ You've exceeded your skill point budget!
+              </p>
+            )}
+            <div style={styles.skillsGrid}>
               {skillsList.map((skill) => (
-                <div key={skill} className="skill-item">
-                  <div className="skill-header">
-                    <label>
+                <div key={skill} style={styles.skillItem}>
+                  <div style={styles.skillHeader}>
+                    <label style={styles.label}>
                       {skill.charAt(0).toUpperCase() + skill.slice(1)}
                     </label>
-                    <label className="checkbox-label">
+                    <label style={styles.checkboxLabel}>
                       <input
                         type="checkbox"
                         checked={character.specializations.includes(skill)}
@@ -484,14 +543,20 @@ const CharacterBuilder = () => {
                       <span>Specialized</span>
                     </label>
                   </div>
-                  <div className="skill-controls">
-                    <button onClick={() => handleSkillChange(skill, -1)}>
+                  <div style={styles.skillControls}>
+                    <button
+                      onClick={() => handleSkillChange(skill, -1)}
+                      style={styles.btnControl}
+                    >
                       -
                     </button>
-                    <span className="skill-value">
+                    <span style={styles.skillValue}>
                       {character.skills[skill]}
                     </span>
-                    <button onClick={() => handleSkillChange(skill, 1)}>
+                    <button
+                      onClick={() => handleSkillChange(skill, 1)}
+                      style={styles.btnControl}
+                    >
                       +
                     </button>
                   </div>
@@ -501,12 +566,27 @@ const CharacterBuilder = () => {
           </section>
 
           {/* Trackers */}
-          <section className="section">
-            <h2>Trackers</h2>
-            <div className="trackers-grid">
-              <div className="tracker-item">
-                <label>Action Points</label>
-                <div className="tracker-dual">
+          <section style={styles.section}>
+            <h2 style={styles.sectionTitle}>Trackers</h2>
+            <div style={styles.trackersGrid}>
+              <div style={styles.trackerItem}>
+                <label style={styles.label}>Current Health</label>
+                <input
+                  type="number"
+                  value={character.trackers.currentHealth}
+                  onChange={(e) =>
+                    handleTrackerChange("currentHealth", e.target.value)
+                  }
+                  placeholder="Current"
+                  style={styles.input}
+                />
+                <small style={styles.helperText}>
+                  Max: {calculateStamina()}
+                </small>
+              </div>
+              <div style={styles.trackerItem}>
+                <label style={styles.label}>Action Points</label>
+                <div style={styles.trackerDual}>
                   <input
                     type="number"
                     value={character.trackers.currentAP}
@@ -514,6 +594,7 @@ const CharacterBuilder = () => {
                       handleTrackerChange("currentAP", e.target.value)
                     }
                     placeholder="Current"
+                    style={styles.inputSmall}
                   />
                   <span>/</span>
                   <input
@@ -523,65 +604,75 @@ const CharacterBuilder = () => {
                       handleTrackerChange("maxAP", e.target.value)
                     }
                     placeholder="Max"
+                    style={styles.inputSmall}
                   />
                 </div>
+                <small style={styles.helperText}>
+                  Effective Max: {calculateEffectiveMaxAP()}
+                </small>
               </div>
-              <div className="tracker-item">
-                <label>Wounded Stage</label>
+              <div style={styles.trackerItem}>
+                <label style={styles.label}>Wounded Stage</label>
                 <input
                   type="number"
                   value={character.trackers.woundedStage}
-                  onChange={(e) =>
-                    handleTrackerChange("woundedStage", e.target.value)
-                  }
+                  readOnly
+                  style={styles.input}
                 />
+                <small style={styles.helperText}>
+                  Auto-calculated from health
+                </small>
               </div>
-              <div className="tracker-item">
-                <label>Armor</label>
+              <div style={styles.trackerItem}>
+                <label style={styles.label}>Armor</label>
                 <input
                   type="number"
                   value={character.trackers.armor}
                   onChange={(e) => handleTrackerChange("armor", e.target.value)}
+                  style={styles.input}
                 />
               </div>
-              <div className="tracker-item">
-                <label>Tempo</label>
+              <div style={styles.trackerItem}>
+                <label style={styles.label}>Tempo</label>
                 <input
                   type="number"
                   value={character.trackers.tempo}
                   onChange={(e) => handleTrackerChange("tempo", e.target.value)}
+                  style={styles.input}
                 />
               </div>
-              <div className="tracker-item">
-                <label>Presence</label>
+              <div style={styles.trackerItem}>
+                <label style={styles.label}>Presence</label>
                 <input
                   type="number"
                   value={character.trackers.presence}
                   onChange={(e) =>
                     handleTrackerChange("presence", e.target.value)
                   }
+                  style={styles.input}
                 />
               </div>
-              <div className="tracker-item">
-                <label>Fame/Infamy</label>
+              <div style={styles.trackerItem}>
+                <label style={styles.label}>Fame/Infamy</label>
                 <input
                   type="number"
                   value={character.trackers.fameInfamy}
                   onChange={(e) =>
                     handleTrackerChange("fameInfamy", e.target.value)
                   }
+                  style={styles.input}
                 />
               </div>
             </div>
           </section>
 
           {/* Text Sections */}
-          <section className="section">
-            <h2>Character Details</h2>
-            <div className="text-sections">
+          <section style={styles.section}>
+            <h2 style={styles.sectionTitle}>Character Details</h2>
+            <div style={styles.textSections}>
               {Object.keys(character.textSections).map((section) => (
-                <div key={section} className="text-section">
-                  <label>
+                <div key={section} style={styles.textSection}>
+                  <label style={styles.label}>
                     {section.charAt(0).toUpperCase() + section.slice(1)}
                   </label>
                   <textarea
@@ -589,6 +680,7 @@ const CharacterBuilder = () => {
                     onChange={(e) => handleTextChange(section, e.target.value)}
                     placeholder={`Enter ${section}...`}
                     rows="4"
+                    style={styles.textarea}
                   />
                 </div>
               ))}
@@ -597,30 +689,40 @@ const CharacterBuilder = () => {
 
           {/* Saved Characters */}
           {savedCharacters.length > 0 && (
-            <section className="section">
-              <h2>Saved Characters</h2>
-              <div className="saved-characters">
+            <section style={styles.section}>
+              <h2 style={styles.sectionTitle}>Saved Characters</h2>
+              <div style={styles.savedCharacters}>
                 {savedCharacters.map((char) => (
-                  <div key={char.id} className="saved-character-card">
-                    <div className="saved-character-info">
-                      <h3>{char.name || "Unnamed Character"}</h3>
-                      <p>
+                  <div key={char.id} style={styles.savedCharacterCard}>
+                    <div style={styles.savedCharacterInfo}>
+                      <h3 style={styles.savedCharacterName}>
+                        {char.name || "Unnamed Character"}
+                      </h3>
+                      <p style={styles.savedCharacterDetails}>
                         {char.species} {char.background}
                       </p>
-                      <small>
+                      <small style={styles.savedCharacterDate}>
                         Saved: {new Date(char.savedAt).toLocaleDateString()}
                       </small>
                     </div>
-                    <div className="saved-character-actions">
+                    <div style={styles.savedCharacterActions}>
                       <button
                         onClick={() => loadCharacter(char.id)}
-                        className="btn btn-sm btn-primary"
+                        style={{
+                          ...styles.btn,
+                          ...styles.btnPrimary,
+                          ...styles.btnSm,
+                        }}
                       >
                         Load
                       </button>
                       <button
                         onClick={() => deleteCharacter(char.id)}
-                        className="btn btn-sm btn-danger"
+                        style={{
+                          ...styles.btn,
+                          ...styles.btnDanger,
+                          ...styles.btnSm,
+                        }}
                       >
                         Delete
                       </button>
@@ -633,6 +735,7 @@ const CharacterBuilder = () => {
         </div>
       </div>
       <PDFExporter
+        ref={pdfExporterRef}
         character={character}
         calculateStamina={calculateStamina}
         calculateInitiative={calculateInitiative}
@@ -640,6 +743,347 @@ const CharacterBuilder = () => {
       />
     </>
   );
+};
+
+const styles = {
+  container: {
+    maxWidth: "1200px",
+    width: "80vw",
+    margin: "0 auto",
+    padding: "20px",
+    fontFamily: "Arial, sans-serif",
+    background: "linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%)",
+    minHeight: "100vh",
+  },
+  header: {
+    backgroundColor: "#1e2738",
+    color: "#e0e6ed",
+    padding: "20px",
+    borderRadius: "8px",
+    marginBottom: "20px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexWrap: "wrap",
+    border: "1px solid #2d3548",
+    flexDirection: "column",
+  },
+  title: {
+    margin: 0,
+    fontSize: "28px",
+    color: "#64b5f6",
+    marginBottom: "15px",
+  },
+  headerButtons: {
+    display: "flex",
+    gap: "10px",
+    flexWrap: "wrap",
+  },
+  btn: {
+    padding: "10px 20px",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+    fontSize: "14px",
+    fontWeight: "bold",
+    transition: "all 0.2s",
+  },
+  btnPrimary: {
+    backgroundColor: "#2196f3",
+    color: "#ffffff",
+  },
+  btnSecondary: {
+    backgroundColor: "#546e7a",
+    color: "#ffffff",
+  },
+  btnSuccess: {
+    backgroundColor: "#4caf50",
+    color: "#ffffff",
+  },
+  btnDanger: {
+    backgroundColor: "#ef5350",
+    color: "#ffffff",
+  },
+  btnSm: {
+    padding: "6px 12px",
+    fontSize: "12px",
+  },
+  btnControl: {
+    padding: "8px 16px",
+    backgroundColor: "#37474f",
+    color: "#e0e6ed",
+    border: "1px solid #455a64",
+    borderRadius: "4px",
+    cursor: "pointer",
+    fontSize: "16px",
+    fontWeight: "bold",
+    transition: "all 0.2s",
+  },
+  mainContent: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "20px",
+  },
+  section: {
+    backgroundColor: "#1a2332",
+    padding: "20px",
+    borderRadius: "8px",
+    boxShadow: "0 4px 8px rgba(0,0,0,0.3)",
+    border: "1px solid #2d3548",
+  },
+  sectionTitle: {
+    margin: "0 0 15px 0",
+    fontSize: "20px",
+    color: "#64b5f6",
+    borderBottom: "2px solid #2196f3",
+    paddingBottom: "10px",
+  },
+  sectionNote: {
+    fontSize: "14px",
+    color: "#90a4ae",
+    marginBottom: "10px",
+  },
+  formGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+    gap: "15px",
+  },
+  formGroup: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  label: {
+    fontWeight: "bold",
+    marginBottom: "5px",
+    color: "#b0bec5",
+  },
+  input: {
+    padding: "8px",
+    border: "1px solid #37474f",
+    borderRadius: "4px",
+    fontSize: "14px",
+    backgroundColor: "#0f1419",
+    color: "#e0e6ed",
+  },
+  select: {
+    padding: "8px",
+    border: "1px solid #37474f",
+    borderRadius: "4px",
+    fontSize: "14px",
+    backgroundColor: "#0f1419",
+    color: "#e0e6ed",
+  },
+  perksDisplay: {
+    marginTop: "15px",
+    padding: "10px",
+    backgroundColor: "#1e3a5f",
+    borderRadius: "4px",
+    color: "#90caf9",
+    border: "1px solid #2d5a8c",
+  },
+  statsGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+    gap: "15px",
+  },
+  statItem: {
+    display: "flex",
+    flexDirection: "column",
+    padding: "10px",
+    backgroundColor: "#0f1922",
+    borderRadius: "4px",
+    border: "1px solid #2d3548",
+  },
+  statControls: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "10px",
+    marginTop: "8px",
+  },
+  statInput: {
+    width: "60px",
+    padding: "8px",
+    textAlign: "center",
+    border: "1px solid #37474f",
+    borderRadius: "4px",
+    fontSize: "16px",
+    backgroundColor: "#0f1419",
+    color: "#e0e6ed",
+  },
+  modifier: {
+    fontSize: "12px",
+    color: "#66bb6a",
+    fontWeight: "normal",
+  },
+  costLabel: {
+    fontSize: "11px",
+    color: "#78909c",
+    marginTop: "5px",
+  },
+  pointsRemaining: {
+    color: "#66bb6a",
+    fontSize: "16px",
+  },
+  pointsNegative: {
+    color: "#ef5350",
+    fontSize: "16px",
+  },
+  warning: {
+    backgroundColor: "#3d1f1f",
+    color: "#ef9a9a",
+    padding: "10px",
+    borderRadius: "4px",
+    marginBottom: "10px",
+    border: "1px solid #5d2f2f",
+  },
+  derivedStats: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    gap: "20px",
+  },
+  derivedStat: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    padding: "15px",
+    backgroundColor: "#1e3a5f",
+    borderRadius: "4px",
+    minWidth: "150px",
+    border: "1px solid #2d5a8c",
+  },
+  derivedLabel: {
+    fontWeight: "bold",
+    color: "#b0bec5",
+  },
+  derivedValue: {
+    fontSize: "24px",
+    color: "#64b5f6",
+    fontWeight: "bold",
+  },
+  skillsGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+    gap: "15px",
+  },
+  skillItem: {
+    padding: "10px",
+    backgroundColor: "#0f1922",
+    borderRadius: "4px",
+    border: "1px solid #2d3548",
+  },
+  skillHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "8px",
+  },
+  checkboxLabel: {
+    display: "flex",
+    alignItems: "center",
+    gap: "5px",
+    fontSize: "12px",
+    color: "#90a4ae",
+  },
+  skillControls: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "15px",
+  },
+  skillValue: {
+    fontSize: "20px",
+    fontWeight: "bold",
+    minWidth: "30px",
+    textAlign: "center",
+    color: "#e0e6ed",
+  },
+  trackersGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+    gap: "15px",
+  },
+  trackerItem: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  trackerDual: {
+    display: "flex",
+    alignItems: "center",
+    gap: "5px",
+    color: "#e0e6ed",
+  },
+  inputSmall: {
+    padding: "8px",
+    border: "1px solid #37474f",
+    borderRadius: "4px",
+    fontSize: "14px",
+    flex: 1,
+    backgroundColor: "#0f1419",
+    color: "#e0e6ed",
+    width: "100%",
+  },
+  helperText: {
+    fontSize: "11px",
+    color: "#78909c",
+    marginTop: "3px",
+  },
+  textSections: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+    gap: "15px",
+  },
+  textSection: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  textarea: {
+    padding: "8px",
+    border: "1px solid #37474f",
+    borderRadius: "4px",
+    fontSize: "14px",
+    fontFamily: "Arial, sans-serif",
+    resize: "vertical",
+    backgroundColor: "#0f1419",
+    color: "#e0e6ed",
+    width: "90%",
+  },
+  savedCharacters: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+    gap: "15px",
+  },
+  savedCharacterCard: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "15px",
+    backgroundColor: "#0f1922",
+    borderRadius: "4px",
+    border: "1px solid #2d3548",
+  },
+  savedCharacterInfo: {
+    flex: 1,
+  },
+  savedCharacterName: {
+    margin: "0 0 5px 0",
+    fontSize: "18px",
+    color: "#64b5f6",
+  },
+  savedCharacterDetails: {
+    margin: "5px 0",
+    fontSize: "14px",
+    color: "#90a4ae",
+  },
+  savedCharacterDate: {
+    fontSize: "12px",
+    color: "#78909c",
+  },
+  savedCharacterActions: {
+    display: "flex",
+    gap: "8px",
+  },
 };
 
 export default CharacterBuilder;

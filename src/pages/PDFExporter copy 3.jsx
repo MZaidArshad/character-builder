@@ -8,7 +8,6 @@ import dice3 from "../assets/Capture-removebg-preview (2).png";
 import clock1 from "../assets/Capture-removebg-preview (3).png";
 import clock2 from "../assets/Capture-removebg-preview (4).png";
 import clock3 from "../assets/Capture-removebg-preview (5).png";
-
 const PDFExporter = forwardRef(
   (
     { character, calculateStamina, calculateInitiative, calculateSpeed },
@@ -27,6 +26,7 @@ const PDFExporter = forwardRef(
     useImperativeHandle(ref, () => ({
       exportPDF: async () => {
         setIsGenerating(true);
+        // Small delay to ensure DOM is rendered
         await new Promise((resolve) => setTimeout(resolve, 100));
         await toPDF();
         setIsGenerating(false);
@@ -57,11 +57,14 @@ const PDFExporter = forwardRef(
         </div>
       );
     };
-
     if (!isGenerating) return null;
-
     return (
       <>
+        {/* <button onClick={() => toPDF()} className="btn btn-success">
+          Export PDF
+        </button> */}
+
+        {/* PDF Content */}
         <div
           ref={targetRef}
           style={{
@@ -70,6 +73,7 @@ const PDFExporter = forwardRef(
             pointerEvents: "none",
           }}
         >
+          {/* <div ref={targetRef} style={{ position: "absolute", left: "0" }}> */}
           <div className="pdf-container">
             {/* Page 1 */}
             <div className="pdf-page">
@@ -91,6 +95,7 @@ const PDFExporter = forwardRef(
                     <h2 className="pdf-section-title">Character</h2>
 
                     <div className="pdf-logo">
+                      {/* <div className="pdf-logo-text">Will &amp; Whispers</div> */}
                       <img src={logo} alt="logo" className="pdf-logo_logo" />
                     </div>
 
@@ -276,9 +281,7 @@ const PDFExporter = forwardRef(
                   <div className="pdf-health-item">
                     <div className="pdf-health-label">Stamina</div>
                     <div className="pdf-health-value">
-                      <span className="pdf-health-fraction">
-                        {character.trackers.currentHealth || stamina}
-                      </span>
+                      <span className="pdf-health-fraction">{stamina}</span>
                       {" / "}
                       <span className="pdf-health-fraction">{stamina}</span>
                     </div>
@@ -322,9 +325,7 @@ const PDFExporter = forwardRef(
                         {character.trackers.armor || 0}
                       </span>
                       {" / "}
-                      <span className="pdf-health-fraction">
-                        {character.trackers.armor || 0}
-                      </span>
+                      <span className="pdf-health-fraction">0</span>
                     </div>
                     <div className="pdf-health-note">
                       AV of equipment + bonuses
@@ -335,13 +336,11 @@ const PDFExporter = forwardRef(
                     <div className="pdf-health-label">Action Points</div>
                     <div className="pdf-health-value">
                       <span className="pdf-health-fraction">
-                        {character.trackers.currentAP ||
-                          (actionPoints >= 0 ? actionPoints : 0)}
+                        {actionPoints >= 0 ? actionPoints : 0}
                       </span>
                       {" / "}
                       <span className="pdf-health-fraction">
-                        {character.trackers.maxAP ||
-                          2 * character.stats.endurance}
+                        {2 * character.stats.endurance}
                       </span>
                     </div>
                     <div className="pdf-health-note">
@@ -370,6 +369,39 @@ const PDFExporter = forwardRef(
                   </div>
                 </div>
               </div>
+
+              {/* <div className="pdf-section">
+              <h2 className="pdf-section-title">Stats</h2>
+              <div className="pdf-stats-grid">
+                {Object.entries(character.stats).map(([stat, value]) => (
+                  <div key={stat} className="pdf-stat-item">
+                    <span className="pdf-stat-label">
+                      {stat.charAt(0).toUpperCase() + stat.slice(1)}
+                    </span>
+                    <span className="pdf-stat-value">{value}</span>
+                  </div>
+                ))}
+              </div>
+            </div> */}
+
+              {/* <div className="pdf-section">
+              <h2 className="pdf-section-title">Skills</h2>
+              <div className="pdf-skills-grid">
+                {Object.entries(character.skills).map(([skill, value]) => {
+                  const isSpecialized =
+                    character.specializations.includes(skill);
+                  return (
+                    <div key={skill} className="pdf-skill-item">
+                      <span className="pdf-skill-name">
+                        {skill.charAt(0).toUpperCase() + skill.slice(1)}
+                        {isSpecialized && " ⭐"}
+                      </span>
+                      <span className="pdf-skill-value">{value}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div> */}
 
               <div className="pdf-section">
                 <h2 className="pdf-section-title pdf-section-title-without-before">
@@ -422,6 +454,7 @@ const PDFExporter = forwardRef(
                       textAlign: "center",
                       display: "flex",
                       gap: "5px",
+
                       alignItems: "center",
                     }}
                   >
@@ -432,6 +465,7 @@ const PDFExporter = forwardRef(
                     style={{
                       textAlign: "center",
                       gap: "5px",
+
                       display: "flex",
                       alignItems: "center",
                     }}
@@ -443,7 +477,7 @@ const PDFExporter = forwardRef(
               </div>
             </div>
 
-            {/* Page 3 - Clocks, Stats, Skills */}
+            {/* Page 4 - Clocks, Stats, Skills */}
             <div className="pdf-page" style={{ paddingTop: "30px" }}>
               <PageHeaders />
               <h3
@@ -476,7 +510,7 @@ const PDFExporter = forwardRef(
                         className="pdf-health-label"
                         style={{ marginBottom: "15px", textAligns: "start" }}
                       >
-                        STR: {character.stats.strength || 0}
+                        STR
                       </h3>
                     </li>
                     <li>
@@ -484,7 +518,7 @@ const PDFExporter = forwardRef(
                         className="pdf-health-label"
                         style={{ marginBottom: "15px", textAligns: "start" }}
                       >
-                        END: {character.stats.endurance || 0}
+                        END
                       </h3>
                     </li>
                     <li>
@@ -492,7 +526,7 @@ const PDFExporter = forwardRef(
                         className="pdf-health-label"
                         style={{ marginBottom: "15px", textAligns: "start" }}
                       >
-                        DEX: {character.stats.dexterity || 0}
+                        DEX
                       </h3>
                     </li>
                     <li>
@@ -500,7 +534,7 @@ const PDFExporter = forwardRef(
                         className="pdf-health-label"
                         style={{ marginBottom: "15px", textAligns: "start" }}
                       >
-                        MND: {character.stats.mind || 0}
+                        MND
                       </h3>
                     </li>
                     <li>
@@ -508,7 +542,7 @@ const PDFExporter = forwardRef(
                         className="pdf-health-label"
                         style={{ marginBottom: "15px", textAligns: "start" }}
                       >
-                        WIL: {character.stats.willpower || 0}
+                        WIL
                       </h3>
                     </li>
                     <li>
@@ -516,7 +550,7 @@ const PDFExporter = forwardRef(
                         className="pdf-health-label"
                         style={{ marginBottom: "15px", textAligns: "start" }}
                       >
-                        SPR: {character.stats.spirit || 0}
+                        SPR
                       </h3>
                     </li>
                   </ol>
@@ -598,8 +632,7 @@ const PDFExporter = forwardRef(
                 RANK = Highest Skill Level in Category
               </p>
             </div>
-
-            {/* Page 4 - Skills Details */}
+            {/* page 4 */}
             <div className="pdf-page" style={{ paddingTop: "30px" }}>
               <PageHeaders />
               <div className="page4-pdf-header">
@@ -607,7 +640,7 @@ const PDFExporter = forwardRef(
                   className="pdf-subsection-title"
                   style={{ marginBottom: "15px", textAligns: "start" }}
                 >
-                  STRENGTH
+                  STRNGTH
                 </h3>
                 <h3
                   className="pdf-subsection-title"
@@ -639,7 +672,7 @@ const PDFExporter = forwardRef(
               <div className="page4-pdf-subheader-values-box">
                 <div className="page4-pdf-subheader-values-inner-box">
                   <h4>BASE</h4>
-                  <h6>{character.skills.athletics || 1}</h6>
+                  <h6>1</h6>
                 </div>
                 <div className="page4-pdf-subheader-values-inner-box">
                   <h4>BASE</h4>
@@ -659,7 +692,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
                 <h3
                   className="pdf-subsection-title"
@@ -669,7 +702,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
                 <h3
                   className="pdf-subsection-title"
@@ -679,7 +712,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
               </div>
               <div className="page4-pdf-speclization-value-box">
@@ -698,7 +731,7 @@ const PDFExporter = forwardRef(
                   <h6>MND</h6>
                 </div>
                 <div className="page4-pdf-subheader-inner-box">
-                  <h4>// COORDINATION //</h4>
+                  <h4>// CORRDINATION //</h4>
                   <h6>DEX</h6>
                 </div>
               </div>
@@ -725,7 +758,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
                 <h3
                   className="pdf-subsection-title"
@@ -735,7 +768,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
                 <h3
                   className="pdf-subsection-title"
@@ -745,7 +778,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
               </div>
               <div className="page4-pdf-speclization-value-box">
@@ -774,7 +807,7 @@ const PDFExporter = forwardRef(
                 </div>
                 <div className="page4-pdf-subheader-values-inner-box">
                   <h4>BASE</h4>
-                  <h6>{character.skills.survival || 1}</h6>
+                  <h6>1</h6>
                 </div>
                 <div className="page4-pdf-subheader-values-inner-box">
                   <h4>BASE</h4>
@@ -790,7 +823,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
                 <h3
                   className="pdf-subsection-title"
@@ -800,7 +833,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
                 <h3
                   className="pdf-subsection-title"
@@ -810,7 +843,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
               </div>
               <div className="page4-pdf-speclization-value-box">
@@ -843,7 +876,7 @@ const PDFExporter = forwardRef(
                 </div>
                 <div className="page4-pdf-subheader-values-inner-box">
                   <h4>BASE</h4>
-                  <h6>{character.skills.stealth || 1}</h6>
+                  <h6>1</h6>
                 </div>
               </div>
               <div className="page4-pdf-header page4-pdf-header-second">
@@ -855,7 +888,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
                 <h3
                   className="pdf-subsection-title"
@@ -865,7 +898,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
                 <h3
                   className="pdf-subsection-title"
@@ -875,7 +908,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
               </div>
               <div className="page4-pdf-speclization-value-box">
@@ -884,8 +917,8 @@ const PDFExporter = forwardRef(
                 <div className="page4-pdf-speclization-value-inner-box"></div>
               </div>
             </div>
-
-            {/* Page 5 - Mind, Willpower, Spirit Skills */}
+            {/* End of PDF Pages */}
+            {/* page 5 */}
             <div className="pdf-page" style={{ paddingTop: "30px" }}>
               <PageHeaders />
               <div className="page4-pdf-header">
@@ -910,11 +943,11 @@ const PDFExporter = forwardRef(
               </div>
               <div className="page4-pdf-subheader">
                 <div className="page4-pdf-subheader-inner-box">
-                  <h4>// AWARENESS //</h4>
+                  <h4>// AWARENCE //</h4>
                   <h6>MND</h6>
                 </div>
                 <div className="page4-pdf-subheader-inner-box">
-                  <h4>// COMMUNICATION //</h4>
+                  <h4>// COMMUNCIATION //</h4>
                   <h6>DEX</h6>
                 </div>
                 <div className="page4-pdf-subheader-inner-box">
@@ -925,11 +958,11 @@ const PDFExporter = forwardRef(
               <div className="page4-pdf-subheader-values-box">
                 <div className="page4-pdf-subheader-values-inner-box">
                   <h4>BASE</h4>
-                  <h6>{character.skills.perception || 1}</h6>
+                  <h6>1</h6>
                 </div>
                 <div className="page4-pdf-subheader-values-inner-box">
                   <h4>BASE</h4>
-                  <h6>{character.skills.persuasion || 1}</h6>
+                  <h6>1</h6>
                 </div>
                 <div className="page4-pdf-subheader-values-inner-box">
                   <h4>BASE</h4>
@@ -945,7 +978,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
                 <h3
                   className="pdf-subsection-title"
@@ -955,7 +988,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
                 <h3
                   className="pdf-subsection-title"
@@ -965,7 +998,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
               </div>
               <div className="page4-pdf-speclization-value-box">
@@ -987,7 +1020,7 @@ const PDFExporter = forwardRef(
                   <h6>WIL</h6>
                 </div>
               </div>
-              <div className="page4-pdf-subheader-values-box">
+              <div div className="page4-pdf-subheader-values-box">
                 <div className="page4-pdf-subheader-values-inner-box">
                   <h4>BASE</h4>
                   <h6>1</h6>
@@ -1010,7 +1043,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
                 <h3
                   className="pdf-subsection-title"
@@ -1020,7 +1053,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
                 <h3
                   className="pdf-subsection-title"
@@ -1030,7 +1063,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
               </div>
               <div className="page4-pdf-speclization-value-box">
@@ -1053,18 +1086,18 @@ const PDFExporter = forwardRef(
                   <h6>MND</h6>
                 </div>
               </div>
-              <div className="page4-pdf-subheader-values-box">
+              <div div className="page4-pdf-subheader-values-box">
                 <div className="page4-pdf-subheader-values-inner-box">
                   <h4>BASE</h4>
                   <h6>1</h6>
                 </div>
                 <div className="page4-pdf-subheader-values-inner-box">
                   <h4>BASE</h4>
-                  <h6>{character.skills.deception || 1}</h6>
+                  <h6>1</h6>
                 </div>
                 <div className="page4-pdf-subheader-values-inner-box">
                   <h4>BASE</h4>
-                  <h6>{character.skills.arcana || 1}</h6>
+                  <h6>1</h6>
                 </div>
               </div>
               <div className="page4-pdf-header page4-pdf-header-second">
@@ -1076,7 +1109,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
                 <h3
                   className="pdf-subsection-title"
@@ -1086,7 +1119,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
                 <h3
                   className="pdf-subsection-title"
@@ -1096,7 +1129,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
               </div>
               <div className="page4-pdf-speclization-value-box">
@@ -1122,15 +1155,15 @@ const PDFExporter = forwardRef(
               <div className="page4-pdf-subheader-values-box">
                 <div className="page4-pdf-subheader-values-inner-box">
                   <h4>BASE</h4>
-                  <h6>{character.skills.investigation || 1}</h6>
+                  <h6>1</h6>
                 </div>
                 <div className="page4-pdf-subheader-values-inner-box">
                   <h4>BASE</h4>
-                  <h6>{character.skills.intimidation || 1}</h6>
+                  <h6>1</h6>
                 </div>
                 <div className="page4-pdf-subheader-values-inner-box">
                   <h4>BASE</h4>
-                  <h6>{character.skills.insight || 1}</h6>
+                  <h6>1</h6>
                 </div>
               </div>
               <div className="page4-pdf-header page4-pdf-header-second">
@@ -1142,7 +1175,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
                 <h3
                   className="pdf-subsection-title"
@@ -1152,7 +1185,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
                 <h3
                   className="pdf-subsection-title"
@@ -1162,7 +1195,7 @@ const PDFExporter = forwardRef(
                     color: "black",
                   }}
                 >
-                  SPECIALIZATION
+                  SPECILIZATION
                 </h3>
               </div>
               <div className="page4-pdf-speclization-value-box">
@@ -1171,8 +1204,7 @@ const PDFExporter = forwardRef(
                 <div className="page4-pdf-speclization-value-inner-box"></div>
               </div>
             </div>
-
-            {/* Page 6 - Spells & Abilities */}
+            {/* page 6 */}
             <div className="pdf-page" style={{ paddingTop: "30px" }}>
               <PageHeaders />
               <div className="pdf-header">
@@ -1180,7 +1212,7 @@ const PDFExporter = forwardRef(
                   className="pdf-title underlined-title"
                   style={{ fontSize: "24px" }}
                 >
-                  SPELLS & ABILITIES
+                  SPELLS & ABILITES
                 </h1>
               </div>
               <div className="Pdf-page6-sub-header">
@@ -1213,7 +1245,7 @@ const PDFExporter = forwardRef(
                     className="pdf-subsection-title"
                     style={{ marginBottom: "5px" }}
                   >
-                    MODIFIERS
+                    MODIFIRES
                   </h3>
                   <div className="page4-inner-content-box"></div>
                   <div className="page4-inner-content-box"></div>
@@ -1224,7 +1256,7 @@ const PDFExporter = forwardRef(
                     className="pdf-subsection-title"
                     style={{ marginBottom: "5px" }}
                   >
-                    REFERRALS
+                    REFFERALS
                   </h3>
                   <div className="page4-inner-content-box"></div>
                   <div className="page4-inner-content-box"></div>
@@ -1248,18 +1280,349 @@ const PDFExporter = forwardRef(
                     className="pdf-subsection-title"
                     style={{ marginBottom: "5px" }}
                   >
-                    ABILITIES
+                    ABLITIES
                   </h3>
-                  <div className="page4-inner-content-box">
-                    {character.textSections.abilities || ""}
-                  </div>
+                  <div className="page4-inner-content-box"></div>
                   <div className="page4-inner-content-box"></div>
                   <div className="page4-inner-content-box"></div>
                 </div>
               </div>
             </div>
+            {/* page-7 */}
+            <div className="pdf-page" style={{ paddingTop: "30px" }}>
+              <PageHeaders />
+              <div className="pdf-header">
+                <h1
+                  className="pdf-title underlined-title"
+                  style={{ fontSize: "24px" }}
+                >
+                  EQUIMENTS
+                </h1>
+              </div>
+              <h3 className="pdf-subsection-title">LIVING</h3>
+              <h3
+                className="pdf-subsection-title"
+                style={{
+                  marginBottom: "15px",
+                  textAligns: "start",
+                  color: "black",
+                }}
+              >
+                LOOT
+              </h3>
+              <div className="page7-pdf-speclization-value-box">
+                <div className="page7-pdf-speclization-value-inner-box2"></div>
+              </div>
+              <h3 className="pdf-subsection-title">ARMOR</h3>
 
-            {/* Page 8 - Equipment and Gear */}
+              <div className="three-grid">
+                <div className="data-card">
+                  <div className="head">
+                    <h3
+                      className="pdf-subsection-title"
+                      style={{
+                        marginBottom: "15px",
+                        textAligns: "start",
+                        color: "black",
+                        borderBottom: "3px",
+                      }}
+                    >
+                      head
+                    </h3>
+                    <div className="page7-pdf-speclization-value-box">
+                      <div className="page7-pdf-speclization-value-inner-box2"></div>
+                    </div>
+                  </div>
+                  <div className="data-card-body">
+                    <div className="left">
+                      <div className="input-lable">Av</div>
+                      <div className="value">0</div>
+                      <div className="value-label">Armor Value</div>
+                    </div>
+                    <div className="right">
+                      <div className="input-lable">Bonus</div>
+                      <div className="empty-value"></div>
+                      <div className="value-label">Penalty applies to DEX</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="data-card">
+                  <div className="head">
+                    <h3
+                      className="pdf-subsection-title"
+                      style={{
+                        marginBottom: "15px",
+                        textAligns: "start",
+                        color: "black",
+                      }}
+                    >
+                      Body
+                    </h3>
+                    <div className="page7-pdf-speclization-value-box">
+                      <div className="page7-pdf-speclization-value-inner-box2"></div>
+                    </div>
+                  </div>
+                  <div className="data-card-body">
+                    <div className="left">
+                      <div className="input-lable">Av</div>
+                      <div className="value">0</div>
+                      <div className="value-label">Armor Value</div>
+                    </div>
+                    <div className="right">
+                      <div className="input-lable">Bonus</div>
+                      <div className="empty-value"></div>
+                      <div className="value-label">Penalty applies to DEX</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="data-card">
+                  <div className="head">
+                    <h3
+                      className="pdf-subsection-title"
+                      style={{
+                        marginBottom: "15px",
+                        textAligns: "start",
+                        color: "black",
+                      }}
+                    >
+                      Shield
+                    </h3>
+                    <div className="page7-pdf-speclization-value-box">
+                      <div className="page7-pdf-speclization-value-inner-box2"></div>
+                    </div>
+                  </div>
+                  <div className="data-card-body">
+                    <div className="left">
+                      <div className="input-lable">Av</div>
+                      <div className="value">0</div>
+                      <div className="value-label">Armor Value</div>
+                    </div>
+                    <div className="right">
+                      <div className="input-lable">Bonus</div>
+                      <div className="empty-value"></div>
+                      <div className="value-label">Penalty applies to DEX</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="data-card">
+                  <div className="head">
+                    <h3
+                      className="pdf-subsection-title"
+                      style={{
+                        marginBottom: "15px",
+                        textAligns: "start",
+                        color: "black",
+                      }}
+                    >
+                      Arms
+                    </h3>
+                    <div className="page7-pdf-speclization-value-box">
+                      <div className="page7-pdf-speclization-value-inner-box2"></div>
+                    </div>
+                  </div>
+                  <div className="data-card-body">
+                    <div className="left">
+                      <div className="input-lable">Av</div>
+                      <div className="value">0</div>
+                      <div className="value-label">Armor Value</div>
+                    </div>
+                    <div className="right">
+                      <div className="input-lable">Bonus</div>
+                      <div className="empty-value"></div>
+                      <div className="value-label">Penalty applies to DEX</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="data-card">
+                  <div className="head">
+                    <h3
+                      className="pdf-subsection-title"
+                      style={{
+                        marginBottom: "15px",
+                        textAligns: "start",
+                        color: "black",
+                      }}
+                    >
+                      Legs
+                    </h3>
+                    <div className="page7-pdf-speclization-value-box">
+                      <div className="page7-pdf-speclization-value-inner-box2"></div>
+                    </div>
+                  </div>
+                  <div className="data-card-body">
+                    <div className="left">
+                      <div className="input-lable">Av</div>
+                      <div className="value">0</div>
+                      <div className="value-label">Armor Value</div>
+                    </div>
+                    <div className="right">
+                      <div className="input-lable">Bonus</div>
+                      <div className="empty-value"></div>
+                      <div className="value-label">Penalty applies to DEX</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="data-card">
+                  <div className="head">
+                    <h3
+                      className="pdf-subsection-title"
+                      style={{
+                        marginBottom: "15px",
+                        textAligns: "start",
+                        color: "black",
+                      }}
+                    >
+                      Layered
+                    </h3>
+                    <div className="page7-pdf-speclization-value-box">
+                      <div className="page7-pdf-speclization-value-inner-box2"></div>
+                    </div>
+                  </div>
+                  <div className="data-card-body">
+                    <div className="left">
+                      <div className="input-lable">Av</div>
+                      <div className="value">0</div>
+                      <div className="value-label">Armor Value</div>
+                    </div>
+                    <div className="right">
+                      <div className="input-lable">Bonus</div>
+                      <div className="empty-value"></div>
+                      <div className="value-label">Penalty applies to DEX</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h3 className="pdf-subsection-title">weapons</h3>
+              <div className="three-grid">
+                <div className="data-card">
+                  <div className="head">
+                    <h3
+                      className="pdf-subsection-title"
+                      style={{
+                        marginBottom: "15px",
+                        textAligns: "start",
+                        color: "black",
+                        borderBottom: "3px",
+                      }}
+                    >
+                      Name
+                    </h3>
+                    <div className="page7-pdf-speclization-value-box">
+                      <div className="page7-pdf-speclization-value-inner-box2"></div>
+                    </div>
+                    <h3
+                      className="pdf-subsection-title"
+                      style={{
+                        marginBottom: "15px",
+                        textAligns: "start",
+                        color: "black",
+                        borderBottom: "3px",
+                      }}
+                    >
+                      Notes
+                    </h3>
+                    <div className="page7-pdf-speclization-value-box">
+                      <div className="page7-pdf-speclization-value-inner-box2"></div>
+                    </div>
+                  </div>
+                  <div className="data-card-body">
+                    <div className="left">
+                      <div className="input-lable">DMG</div>
+                      <div className="value">0</div>
+                    </div>
+                    <div className="left">
+                      <div className="input-lable">ROF</div>
+                      <div className="value">0</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="data-card">
+                  <div className="head">
+                    <h3
+                      className="pdf-subsection-title"
+                      style={{
+                        marginBottom: "15px",
+                        textAligns: "start",
+                        color: "black",
+                        borderBottom: "3px",
+                      }}
+                    >
+                      Name
+                    </h3>
+                    <div className="page7-pdf-speclization-value-box">
+                      <div className="page7-pdf-speclization-value-inner-box2"></div>
+                    </div>
+                    <h3
+                      className="pdf-subsection-title"
+                      style={{
+                        marginBottom: "15px",
+                        textAligns: "start",
+                        color: "black",
+                        borderBottom: "3px",
+                      }}
+                    >
+                      Notes
+                    </h3>
+                    <div className="page7-pdf-speclization-value-box">
+                      <div className="page7-pdf-speclization-value-inner-box2"></div>
+                    </div>
+                  </div>
+                  <div className="data-card-body">
+                    <div className="left">
+                      <div className="input-lable">DMG</div>
+                      <div className="value">0</div>
+                    </div>
+                    <div className="left">
+                      <div className="input-lable">ROF</div>
+                      <div className="value">0</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="data-card">
+                  <div className="head">
+                    <h3
+                      className="pdf-subsection-title"
+                      style={{
+                        marginBottom: "15px",
+                        textAligns: "start",
+                        color: "black",
+                        borderBottom: "3px",
+                      }}
+                    >
+                      Name
+                    </h3>
+                    <div className="page7-pdf-speclization-value-box">
+                      <div className="page7-pdf-speclization-value-inner-box2"></div>
+                    </div>
+                    <h3
+                      className="pdf-subsection-title"
+                      style={{
+                        marginBottom: "15px",
+                        textAligns: "start",
+                        color: "black",
+                        borderBottom: "3px",
+                      }}
+                    >
+                      Notes
+                    </h3>
+                    <div className="page7-pdf-speclization-value-box">
+                      <div className="page7-pdf-speclization-value-inner-box2"></div>
+                    </div>
+                  </div>
+                  <div className="data-card-body">
+                    <div className="left">
+                      <div className="input-lable">DMG</div>
+                      <div className="value">0</div>
+                    </div>
+                    <div className="left">
+                      <div className="input-lable">ROF</div>
+                      <div className="value">0</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Page 8 */}
             <div className="pdf-page" style={{ paddingTop: "30px" }}>
               <PageHeaders />
 
@@ -1293,9 +1656,7 @@ const PDFExporter = forwardRef(
                       Notes
                     </h3>
                     <div className="page7-pdf-speclization-value-box">
-                      <div className="page7-pdf-speclization-value-inner-box2">
-                        {character.textSections.gear || ""}
-                      </div>
+                      <div className="page7-pdf-speclization-value-inner-box2"></div>
                     </div>
                   </div>
                 </div>
@@ -1364,7 +1725,6 @@ const PDFExporter = forwardRef(
                   </div>
                 </div>
               </div>
-
               <h3
                 className="pdf-subsection-title"
                 style={{

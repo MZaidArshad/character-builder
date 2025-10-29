@@ -8,7 +8,7 @@
 .pdf-page {
   font-family: "Inter", sans-serif;
   width: 8.5in;
-  min-height: 11in;
+  height: 11in;
   padding: 0.5in;
   background: white;
   color: #000;
@@ -17,7 +17,7 @@
   overflow: hidden;
 }
 .pdf-skills-page {
-  padding: 40px 48px;
+  padding: 15px 48px 40px;
 }
 .pdf-header {
   text-align: center;
@@ -36,25 +36,28 @@
 .pdf-title {
   font-size: 32px;
   font-weight: 700;
-  margin: 20px 0 5px 0;
+  margin: 15px 0 5px 0;
   letter-spacing: 1px;
+  padding-left: 15px;
   text-align: start;
   position: relative;
+  text-transform: uppercase;
 }
-.pdf-title::before {
+.pdf-title.underlined-title::before {
   content: "";
   height: 4px;
   width: 180px;
   background-color: #000000;
   position: absolute;
   bottom: -15px;
+  left: 0;
 }
 
 .pdf-date {
   font-size: 11px;
   color: #333;
   position: absolute;
-  top: 0.5in;
+  top: 0.1in;
   left: 0.5in;
 }
 
@@ -62,8 +65,8 @@
   font-size: 11px;
   color: #333;
   position: absolute;
-  top: 0.5in;
-  right: 0.5in;
+  top: 0.1in;
+  right: 3in;
 }
 
 .pdf-section {
@@ -86,7 +89,7 @@
 }
 
 .pdf-section-title {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   text-transform: uppercase;
   text-align: left;
@@ -134,10 +137,10 @@
 }
 
 .pdf-subsection-title {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
   text-transform: uppercase;
-  margin: 15px 0 0px 0;
+  margin: 10px 0 0 !important;
   text-align: start;
   color: #999;
   letter-spacing: 0.5px;
@@ -218,8 +221,9 @@
 }
 
 .pdf-health-value {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 19px;
+  font-weight: 500;
+  margin-top: 10px;
 }
 
 .pdf-health-fraction {
@@ -227,12 +231,12 @@
 }
 
 .pdf-health-note {
-  font-size: 9px;
+  font-size: 13px;
   color: #666;
   margin-top: 3px;
-  max-width: 150px;
-  margin-left: auto;
-  margin-right: auto;
+  /* max-width: 200px; */
+  width: 100%;
+  text-align: left;
 }
 
 .pdf-logo {
@@ -280,11 +284,13 @@
 }
 
 .pdf-text-content {
-  font-size: 11px;
+  font-size: 15px;
   line-height: 1;
   white-space: pre-wrap;
-  min-height: 30px;
+  min-height: 25px;
   padding: 0;
+  padding-left: 15px;
+  margin-top: 10px;
   border-bottom: 1px solid #ddd;
 }
 
@@ -342,8 +348,14 @@
   width: 50%;
   text-align: start;
 }
+.pdf-stats-and-limit-main-box-inner p {
+  color: #656565;
+  font-size: 13px;
+  padding-right: 15px;
+}
 .pdf-ol {
   padding: 0 20px;
+  list-style: "1";
 }
 .pdf-ol li h3 {
   margin-left: 30px;
@@ -351,13 +363,20 @@
 .pdf-ol li {
   padding: 8px 0px;
 }
+
+.p3-skills-desc {
+  color: #656565;
+  font-size: 13px;
+  width: 51%;
+}
+
 /* page 4 */
 .page4-pdf-header {
   display: flex;
   padding: 0px 0;
 
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 .page4-pdf-subheader {
   display: flex;
@@ -370,7 +389,7 @@
   text-align: center;
 }
 .page4-pdf-subheader-inner-box h4 {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   margin-top: 10px;
   text-transform: uppercase;
@@ -396,7 +415,7 @@
   top: 25px;
 }
 .page4-pdf-subheader-inner-box h6 {
-  font-size: 16px;
+  font-size: 13px;
   color: #666;
   position: absolute;
   font-weight: 400;
@@ -445,6 +464,16 @@
   width: 200px;
   border-bottom: 3px solid #ddd;
 }
+.page7-pdf-speclization-value-inner-box {
+  height: 20px;
+  /* width: 200px; */
+  border-bottom: 1px solid #ddd;
+}
+.page7-pdf-speclization-value-inner-box2 {
+  height: 20px;
+  /* width: 200px; */
+  border-bottom: 2px solid #ddd;
+}
 /* page 6 */
 .Pdf-page6-sub-header {
   display: flex;
@@ -458,6 +487,103 @@
 .page4-inner-content-box {
   height: 40px;
   width: 100%;
+  text-align: left;
+  color: #333;
   border-bottom: 3px solid #ddd;
 }
 /* page 7 */
+
+.three-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px 20px;
+}
+
+.data-card-body {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.data-card-body .input-lable {
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-top: 15px;
+
+  color: black;
+  letter-spacing: 0.5px;
+}
+.data-card-body .right .input-lable {
+  text-align: left;
+}
+
+.data-card-body .left {
+  flex: 1;
+}
+.data-card-body .right {
+  flex: 1;
+}
+
+.data-card-body .value,
+.data-card-body .empty-value {
+  font-size: 17px;
+
+  text-transform: uppercase;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.data-card-body .empty-value {
+  border-bottom: 2px solid #ddd;
+}
+
+.data-card-body .value-label {
+  font-size: 13px;
+  margin-bottom: 10px;
+  color: #656565;
+  text-align: left;
+}
+
+/* page 8 */
+.two-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 25px;
+  margin-top: 15px;
+}
+
+.two-grid .page7-pdf-speclization-value-inner-box2 {
+  margin-top: 10px;
+}
+
+.page8-pdf-subheader-inner-box {
+  position: relative;
+  text-align: center;
+}
+.page8-pdf-subheader-inner-box h4 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 16px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  color: black;
+}
+.page8-pdf-subheader-inner-box h4::before {
+  content: "";
+  height: 2px;
+  width: 32%;
+  position: absolute;
+  left: 0px;
+  background-color: #dddddd;
+  top: 10px;
+}
+.page8-pdf-subheader-inner-box h4::after {
+  content: "";
+  height: 2px;
+  width: 32%;
+  position: absolute;
+  right: 0px;
+  background-color: #dddddd;
+  top: 10px;
+}
